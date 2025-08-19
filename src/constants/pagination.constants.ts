@@ -1,0 +1,5 @@
+export const PAGINATION_DEFAULT_VALUES = {
+  OFFSET: 0,
+  LIMIT: 10,
+  PAGE: 1,
+};

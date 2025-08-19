@@ -66,7 +66,7 @@ export const errorHandler = (
   return res.status(StatusCode.INTERNAL_SERVER_ERROR).json({
     status: 'erro',
     message: 'Erro interno do servidor',
-    ...(process.env.NODE_ENV === 'development' && {
+    ...(process.env.NODE_ENV != 'production' && {
       error: err.message,
       stack: err.stack,
     }),
