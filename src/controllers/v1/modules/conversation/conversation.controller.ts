@@ -3,7 +3,7 @@ import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
 import ConversationService from '@/services/v1/modules/conversation/conversation.service';
 import { StatusCode } from '@/constants/status-code.constants';
 import { paginationSchema, PaginationInput } from '@/validations/v1/base/pagination.validations';
-import { ConversationResource } from '@/resources/v1/modules/conversation/conversation.resource';
+import { PaginationResource } from '@/resources/v1/base/pagination/pagination.resource';
 
 export class ConversationController {
   index = catchAsync(async (req: Request<{}, {}, {}, PaginationInput>, res: Response) => {
@@ -14,14 +14,9 @@ export class ConversationController {
 
     res.status(StatusCode.OK).json({
       message: 'Conversas listadas com sucesso.',
-      data: {
-        conversations: ConversationResource.collectionToResponse(conversations.data),
-        pagination: conversations.pagination,
-      },
+      ...PaginationResource.fromRepositoryResult(conversations),
     });
   });
 }
 
 export default new ConversationController();
-
-

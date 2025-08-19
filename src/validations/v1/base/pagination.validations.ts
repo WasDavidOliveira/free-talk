@@ -32,12 +32,19 @@ export const paginationSchema = z.object({
           example: 'Pesquisa',
         }).optional(),
       order_by: z
-        .string({ required_error: 'Ordenação é obrigatório' })
+        .string()
         .default('created_at')
         .openapi({
-          description: 'Ordenação',
+          description: 'Campo para ordenação (padrão: created_at)',
           example: 'created_at',
-        }).optional(),
+        }),
+      order_direction: z
+        .enum(['asc', 'desc'])
+        .default('desc')
+        .openapi({
+          description: 'Direção da ordenação (asc ou desc, padrão: desc)',
+          example: 'desc',
+        }),
     })
     .openapi({
       ref: 'PaginationInput',

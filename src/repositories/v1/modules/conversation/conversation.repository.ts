@@ -1,19 +1,20 @@
 import { db } from '@/db/db.connection';
 import { conversation } from '@/db/schema/v1/conversation.schema';
-import { and, desc, eq, ilike, sql } from 'drizzle-orm';
+import { and, desc, eq, ilike, sql, asc } from 'drizzle-orm';
 import { PaginationInput } from '@/validations/v1/base/pagination.validations';
 import { CreateConversationModel } from '@/types/models/v1/conversation.types';
 import { PAGINATION_DEFAULT_VALUES } from '@/constants/pagination.constants';
 
 class ConversationRepository {
   async index(userId: number, pagination: PaginationInput) {
-    const { per_page, offset, search, order_by, page } = pagination;
+    const { per_page, offset, search, order_by, page, order_direction } = pagination;
 
     const itemsPerPage = per_page || PAGINATION_DEFAULT_VALUES.LIMIT;
     const currentPage = page || PAGINATION_DEFAULT_VALUES.PAGE;
     const calculatedOffset = offset || (currentPage - 1) * itemsPerPage;
     const searchTerm = search || '';
     const orderBy = order_by || 'created_at';
+    const orderDirection = order_direction || 'desc';
 
     const hasSearch = searchTerm.trim().length > 0;
 
@@ -22,13 +23,14 @@ class ConversationRepository {
       : eq(conversation.createdBy, userId);
 
     const orderField = orderBy === 'title' ? conversation.title : conversation.createdAt;
+    const orderFunction = orderDirection === 'asc' ? asc : desc;
 
     const totalResult = await db
       .select({ count: sql<number>`count(*)` })
       .from(conversation)
       .where(whereClause);
 
-    const total = totalResult[0]?.count || 0;
+    const total = parseInt(totalResult[0]?.count?.toString() || '0');
     const totalPages = Math.ceil(total / itemsPerPage);
 
     const conversations = await db.query.conversation.findMany({
@@ -38,7 +40,7 @@ class ConversationRepository {
       },
       limit: itemsPerPage,
       offset: calculatedOffset,
-      orderBy: [desc(orderField)],
+      orderBy: [orderFunction(orderField)],
     });
 
     return {

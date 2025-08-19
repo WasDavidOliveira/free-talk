@@ -63,8 +63,33 @@ describe('Conversas', () => {
         .query({
           page: 1,
           per_page: 2,
-          search: 'teste',
         });
+      
+      expect(response.status).toBe(StatusCode.OK);
+      
+      expect(response.body.message).toBeDefined();
+      expect(response.body.data).toBeDefined();
+      expect(response.body.pagination).toBeDefined();
+      
+      expect(response.body.data).toHaveLength(2);
+      expect(response.body.data[0]).toHaveProperty('id');
+      expect(response.body.data[0]).toHaveProperty('title');
+      expect(response.body.data[0]).toHaveProperty('createdBy');
+      expect(response.body.data[0]).toHaveProperty('createdAt');
+      
+      expect(response.body.pagination).toHaveProperty('total');
+      expect(response.body.pagination).toHaveProperty('page');
+      expect(response.body.pagination).toHaveProperty('per_page');
+      expect(response.body.pagination).toHaveProperty('total_pages');
+      expect(response.body.pagination).toHaveProperty('has_next_page');
+      expect(response.body.pagination).toHaveProperty('has_previous_page');
+      
+      expect(response.body.pagination.total).toBe(10);
+      expect(response.body.pagination.page).toBe(1);
+      expect(response.body.pagination.per_page).toBe(2);
+      expect(response.body.pagination.total_pages).toBe(5);
+      expect(response.body.pagination.has_next_page).toBe(true);
+      expect(response.body.pagination.has_previous_page).toBe(false);
     });
   });
 });
