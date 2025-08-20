@@ -7,7 +7,7 @@ const createDatabaseUrl = (): string => {
   const port = process.env.DB_PORT || '5432';
   const user = process.env.DB_USER || 'postgres';
   const password = process.env.DB_PASSWORD || 'senha';
-  const database = process.env.DB_NAME || 'carajapp';
+  const database = process.env.DB_NAME || 'freetalk';
 
   return `postgresql://${user}:${password}@${host}:${port}/${database}`;
 };

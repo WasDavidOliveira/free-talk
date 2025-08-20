@@ -1,7 +1,7 @@
 {
-  "name": "avalanche-labs-starter-kit-api",
+  "name": "free-talk-api",
   "version": "1.0.0",
-  "description": "Starter kit for API development from AvalancheLabs",
+  "description": "Free Talk API",
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --transpile-only src/server.ts",
