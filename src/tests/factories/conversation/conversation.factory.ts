@@ -5,6 +5,7 @@ import {
   CreateConversationModel,
 } from '@/types/models/v1/conversation.types';
 import { UserFactory } from '@/tests/factories/auth/user.factory';
+import { UserModel } from '@/types/models/v1/auth.types';
 
 export class ConversationBuilder {
   private data: Partial<CreateConversationModel> = {};
@@ -105,5 +106,34 @@ export class ConversationFactory {
     overrides: Partial<CreateConversationModel> = {}
   ): Promise<ConversationModel[]> {
     return new ConversationBuilder().withOverrides(overrides).createMany(count);
+  }
+
+  static async createConversationWithParticipants(
+    participantsCount: number = 2,
+    conversationOverrides: Partial<CreateConversationModel> = {}
+  ): Promise<{ conversation: ConversationModel; participants: UserModel[] }> {
+    const conversation = await this.createConversation(conversationOverrides);
+    
+    const participants: UserModel[] = [];
+    for (let i = 0; i < participantsCount; i++) {
+      const { user } = await UserFactory.createUser();
+      participants.push(user);
+    }
+
+    const userIds = participants.map(p => p.id);
+    await ConversationRepository.addParticipants(conversation.id, userIds);
+
+    return {
+      conversation,
+      participants,
+    };
+  }
+
+  static async addParticipantsToConversation(
+    conversationId: number,
+    users: UserModel[]
+  ): Promise<void> {
+    const userIds = users.map(user => user.id);
+    await ConversationRepository.addParticipants(conversationId, userIds);
   }
 }

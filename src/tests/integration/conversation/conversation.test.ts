@@ -242,5 +242,81 @@ describe('Conversas', () => {
       expect(response.body.data.length).toBe(1);
       expect(response.body.data[0].userId).toBe(user2.user.id);
     });
+
+    it('(addParticipants) deve retornar erro 400 se os participantes já existirem na conversa', async () => {
+      const conversation = await ConversationFactory.createConversation({
+        createdBy: user.id,
+      });
+
+      const user2 = await UserFactory.createUser();
+      const user3 = await UserFactory.createUser();
+
+      await ConversationFactory.addParticipantsToConversation(conversation.id, [
+        user2.user,
+        user3.user,
+      ]);
+
+      const response = await request(app)
+        .post(`/api/v1/conversations/${conversation.id}/participants`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          userIds: [user2.user.id, user3.user.id],
+        })
+        .expect(400);
+
+      expect(response.body.message).toContain('Alguns participantes já existem na conversa');
+      expect(response.body.message).toContain(`${user2.user.id}`);
+      expect(response.body.message).toContain(`${user3.user.id}`);
+    });
+  });
+
+  describe('(getParticipants) GET /api/v1/conversations/:id/participants', () => {
+    it('(getParticipants) deve listar participantes da conversa', async () => {
+      const { conversation, participants } = await ConversationFactory.createConversationWithParticipants(
+        3,
+        { createdBy: user.id }
+      );
+
+      const response = await request(app)
+        .get(`/api/v1/conversations/${conversation.id}/participants`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(response.body.message).toBe('Participantes listados com sucesso.');
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.length).toBe(3);
+      
+      const participantIds = response.body.data.map((p: { userId: number }) => p.userId);
+      participants.forEach(participant => {
+        expect(participantIds).toContain(participant.id);
+      });
+    });
+  });
+
+  describe('(removeParticipant) DELETE /api/v1/conversations/:id/participants/:userId', () => {
+    it('(removeParticipant) deve remover participante da conversa', async () => {
+      const { conversation, participants } = await ConversationFactory.createConversationWithParticipants(
+        2,
+        { createdBy: user.id }
+      );
+
+      const participantToRemove = participants[0];
+
+      const response = await request(app)
+        .delete(`/api/v1/conversations/${conversation.id}/participants/${participantToRemove.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      expect(response.body.message).toBe('Participante removido com sucesso.');
+
+      const listResponse = await request(app)
+        .get(`/api/v1/conversations/${conversation.id}/participants`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(200);
+
+      const remainingParticipantIds = listResponse.body.data.map((p: { userId: number }) => p.userId);
+      expect(remainingParticipantIds).not.toContain(participantToRemove.id);
+      expect(remainingParticipantIds.length).toBe(1);
+    });
   });
 });
