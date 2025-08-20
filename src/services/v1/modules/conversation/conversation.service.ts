@@ -52,7 +52,13 @@ export class ConversationService {
       throw new NotFoundError('Conversa não encontrada');
     }
 
-    return conversation;
+    const updatedConversation = await ConversationRepository.update(
+      userId,
+      conversationId,
+      conversationData
+    );
+
+    return updatedConversation;
   }
 }
 

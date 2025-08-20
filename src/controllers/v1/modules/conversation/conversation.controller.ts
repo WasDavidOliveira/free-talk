@@ -4,7 +4,7 @@ import ConversationService from '@/services/v1/modules/conversation/conversation
 import { StatusCode } from '@/constants/status-code.constants';
 import { paginationSchema, PaginationInput } from '@/validations/v1/base/pagination.validations';
 import { PaginationResource } from '@/resources/v1/base/pagination/pagination.resource';
-import { CreateConversationInput } from '@/validations/v1/modules/conversation.validations';
+import { CreateConversationInput, UpdateConversationInput } from '@/validations/v1/modules/conversation.validations';
 import ConversationResource from '@/resources/v1/modules/conversation/conversation.resource';
 
 export class ConversationController {
@@ -39,6 +39,19 @@ export class ConversationController {
 
     res.status(StatusCode.OK).json({
       message: 'Conversa encontrada com sucesso.',
+      data: await ConversationResource.toResponse(conversation),
+    });
+  });
+
+  update = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.userId;
+    const { id } = req.params;
+    const conversationData: UpdateConversationInput = req.body;
+
+    const conversation = await ConversationService.update(userId, parseInt(id), conversationData);
+
+    res.status(StatusCode.OK).json({
+      message: 'Conversa atualizada com sucesso.',
       data: await ConversationResource.toResponse(conversation),
     });
   });
