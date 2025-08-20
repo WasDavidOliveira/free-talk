@@ -60,6 +60,21 @@ export class ConversationService {
 
     return updatedConversation;
   }
+
+  async delete(userId: number, conversationId: number) {
+    const conversation = await ConversationRepository.findByIdAndUserId({
+      id: conversationId,
+      userId,
+    });
+
+    if (!conversation) {
+      throw new NotFoundError('Conversa não encontrada');
+    }
+
+    await ConversationRepository.delete(conversationId);
+
+    return true;
+  }
 }
 
 export default new ConversationService();

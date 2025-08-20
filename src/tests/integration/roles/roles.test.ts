@@ -12,7 +12,7 @@ let token: string;
 
 beforeAll(async () => {
   server = app.listen();
-  
+
   token = UserFactory.generateJwtToken(1);
 });
 

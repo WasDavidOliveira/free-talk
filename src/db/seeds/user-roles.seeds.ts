@@ -27,8 +27,9 @@ export async function seedUserRoles() {
     }
 
     for (const userRecord of allUsers) {
-      const roleToAssign = userRecord.email === 'admin@example.com' ? adminRole : userRole;
-      
+      const roleToAssign =
+        userRecord.email === 'admin@example.com' ? adminRole : userRole;
+
       const existing = await db
         .select()
         .from(userRoles)
@@ -41,14 +42,14 @@ export async function seedUserRoles() {
         .limit(1);
 
       if (existing.length === 0) {
-        await db
-          .insert(userRoles)
-          .values({
-            userId: userRecord.id,
-            roleId: roleToAssign.id,
-          });
-        
-        logger.info(`Assigned role "${roleToAssign.name}" to user "${userRecord.email}"`);
+        await db.insert(userRoles).values({
+          userId: userRecord.id,
+          roleId: roleToAssign.id,
+        });
+
+        logger.info(
+          `Assigned role "${roleToAssign.name}" to user "${userRecord.email}"`
+        );
       }
     }
 
@@ -66,4 +67,4 @@ if (require.main === module) {
       logger.error('Failed to seed user roles:', error);
       process.exit(1);
     });
-} 
+}

@@ -115,6 +115,10 @@ class ConversationRepository {
 
     return updatedConversation;
   }
+
+  async delete(conversationId: number) {
+    await db.delete(conversation).where(eq(conversation.id, conversationId));
+  }
 }
 
 export default new ConversationRepository();

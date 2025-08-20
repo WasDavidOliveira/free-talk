@@ -127,7 +127,7 @@ describe('Conversas', () => {
       const response = await request(server)
         .get(`${apiUrl}/` + randomNumber)
         .set('Authorization', `Bearer ${token}`);
-      
+
       expect(response.status).toBe(StatusCode.NOT_FOUND);
       expect(response.body.message).toBe('Conversa não encontrada');
     });
@@ -147,6 +147,79 @@ describe('Conversas', () => {
       expect(response.body.data.title).toBe('Conversa de teste');
       expect(response.body.data.createdBy).toBeDefined();
       expect(response.body.data.createdBy.id).toBe(user.id);
+    });
+
+    it('(create) deve retornar erro 400 se o título não for informado', async () => {
+      const response = await request(server)
+        .post(`${apiUrl}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({});
+
+      expect(response.status).toBe(StatusCode.BAD_REQUEST);
+      expect(response.body.errors[0].campo).toBe('title');
+      expect(response.body.errors[0].mensagem).toBe('Título é obrigatório');
+    });
+  });
+
+  describe('(update) PUT /api/v1/conversations/:id', () => {
+    it('(update) deve atualizar uma conversa com sucesso', async () => {
+      const conversation = await ConversationFactory.createConversation({
+        createdBy: user.id,
+      });
+
+      const response = await request(server)
+        .put(`${apiUrl}/${conversation.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ title: 'Conversa de teste atualizada' });
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.message).toBe('Conversa atualizada com sucesso.');
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.id).toBe(conversation.id);
+      expect(response.body.data.title).toBe('Conversa de teste atualizada');
+      expect(response.body.data.createdBy.id).toBe(user.id);
+    });
+
+    it('(update) deve retornar erro 400 se o título não for informado', async () => {
+      const conversation = await ConversationFactory.createConversation({
+        createdBy: user.id,
+      });
+
+      const response = await request(server)
+        .put(`${apiUrl}/${conversation.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({});
+
+      expect(response.status).toBe(StatusCode.BAD_REQUEST);
+      expect(response.body.errors[0].campo).toBe('title');
+      expect(response.body.errors[0].mensagem).toBe('Título é obrigatório');
+    });
+  });
+
+  describe('(delete) DELETE /api/v1/conversations/:id', () => {
+    it('(delete) deve deletar uma conversa com sucesso', async () => {
+      const conversation = await ConversationFactory.createConversation({
+        createdBy: user.id,
+      });
+
+      const response = await request(server)
+        .delete(`${apiUrl}/${conversation.id}`)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.OK);
+      expect(response.body.message).toBe('Conversa deletada com sucesso.');
+    });
+
+    it('(delete) deve retornar erro 404 se a conversa não for encontrada', async () => {
+      let randomNumber = Math.floor(Math.random() * 100) + 1;
+
+      const response = await request(server)
+        .delete(`${apiUrl}/${randomNumber}`)
+        .set('Authorization', `Bearer ${token}`);
+
+      expect(response.status).toBe(StatusCode.NOT_FOUND);
+      expect(response.body.message).toBe('Conversa não encontrada');
+      expect(response.body.data).toBeUndefined();
     });
   });
 });

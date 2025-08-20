@@ -4,7 +4,10 @@ import { user } from '@/db/schema/v1/user.schema';
 import { permissions } from '@/db/schema/v1/permission.schema';
 import { rolePermissions } from '@/db/schema/v1/role-permission.schema';
 import { eq, and, inArray, or } from 'drizzle-orm';
-import { ForbiddenError, UnauthorizedError } from '@/utils/core/app-error.utils';
+import {
+  ForbiddenError,
+  UnauthorizedError,
+} from '@/utils/core/app-error.utils';
 import { PermissionCheck } from '@/types/models/v1/permission.types';
 import { PermissionAction } from '@/constants/permission.constants';
 import { UserWithRoles } from '@/types/infrastructure/middlewares.types';
@@ -51,8 +54,8 @@ export const hasPermission = (
         );
       }
 
-      const userRoleIds = userData.userRoles.map(ur => ur.roleId);
-      
+      const userRoleIds = userData.userRoles.map((ur) => ur.roleId);
+
       const hasPermission = await db.query.rolePermissions.findFirst({
         where: and(
           inArray(rolePermissions.roleId, userRoleIds),
@@ -99,7 +102,7 @@ export const hasAllPermissions = (permissionChecks: PermissionCheck[]) => {
         throw new ForbiddenError('Usuário não possui nenhum papel atribuído');
       }
 
-      const userRoleIds = userData.userRoles.map(ur => ur.roleId);
+      const userRoleIds = userData.userRoles.map((ur) => ur.roleId);
 
       const permissionConditions = permissionChecks.map(({ name, action }) =>
         and(eq(permissions.name, name), eq(permissions.action, action))
@@ -110,18 +113,22 @@ export const hasAllPermissions = (permissionChecks: PermissionCheck[]) => {
       });
 
       if (allPermissions.length !== permissionChecks.length) {
-        const foundPermissions = allPermissions.map(p => `${p.name}:${p.action}`);
-        const requestedPermissions = permissionChecks.map(p => `${p.name}:${p.action}`);
-        const missingPermissions = requestedPermissions.filter(
-          rp => !foundPermissions.includes(rp)
+        const foundPermissions = allPermissions.map(
+          (p) => `${p.name}:${p.action}`
         );
-        
+        const requestedPermissions = permissionChecks.map(
+          (p) => `${p.name}:${p.action}`
+        );
+        const missingPermissions = requestedPermissions.filter(
+          (rp) => !foundPermissions.includes(rp)
+        );
+
         throw new ForbiddenError(
           `Permissões não encontradas no sistema: ${missingPermissions.join(', ')}`
         );
       }
 
-      const permissionIds = allPermissions.map(p => p.id);
+      const permissionIds = allPermissions.map((p) => p.id);
       const userRolePermissions = await db.query.rolePermissions.findMany({
         where: and(
           inArray(rolePermissions.roleId, userRoleIds),
@@ -130,11 +137,13 @@ export const hasAllPermissions = (permissionChecks: PermissionCheck[]) => {
       });
 
       if (userRolePermissions.length !== permissionChecks.length) {
-        const userPermissionIds = userRolePermissions.map(rp => rp.permissionId);
+        const userPermissionIds = userRolePermissions.map(
+          (rp) => rp.permissionId
+        );
         const missingPermissions = allPermissions
-          .filter(p => !userPermissionIds.includes(p.id))
-          .map(p => `${p.name}:${p.action}`);
-        
+          .filter((p) => !userPermissionIds.includes(p.id))
+          .map((p) => `${p.name}:${p.action}`);
+
         throw new ForbiddenError(
           `Usuário não possui as seguintes permissões: ${missingPermissions.join(', ')}`
         );
@@ -173,7 +182,7 @@ export const hasAnyPermission = (permissionChecks: PermissionCheck[]) => {
         throw new ForbiddenError('Usuário não possui nenhum papel atribuído');
       }
 
-      const userRoleIds = userData.userRoles.map(ur => ur.roleId);
+      const userRoleIds = userData.userRoles.map((ur) => ur.roleId);
 
       const permissionConditions = permissionChecks.map(({ name, action }) =>
         and(eq(permissions.name, name), eq(permissions.action, action))
@@ -184,7 +193,9 @@ export const hasAnyPermission = (permissionChecks: PermissionCheck[]) => {
       });
 
       if (permissionList.length === 0) {
-        const requestedPermissions = permissionChecks.map(p => `${p.name}:${p.action}`);
+        const requestedPermissions = permissionChecks.map(
+          (p) => `${p.name}:${p.action}`
+        );
         throw new ForbiddenError(
           `Nenhuma das permissões especificadas foi encontrada: ${requestedPermissions.join(', ')}`
         );
@@ -199,7 +210,9 @@ export const hasAnyPermission = (permissionChecks: PermissionCheck[]) => {
       });
 
       if (userRolePermissions.length === 0) {
-        const availablePermissions = permissionList.map(p => `${p.name}:${p.action}`);
+        const availablePermissions = permissionList.map(
+          (p) => `${p.name}:${p.action}`
+        );
         throw new ForbiddenError(
           `Usuário não possui nenhuma das seguintes permissões: ${availablePermissions.join(', ')}`
         );

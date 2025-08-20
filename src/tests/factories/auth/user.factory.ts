@@ -2,7 +2,10 @@ import { faker } from '@faker-js/faker';
 import { CreateUserModel, UserModel } from '@/types/models/v1/auth.types';
 import bcrypt from 'bcrypt';
 import UserRepository from '@/repositories/v1/modules/auth/user.repository';
-import { LoginInput, RegisterInput } from '@/validations/v1/modules/auth.validations';
+import {
+  LoginInput,
+  RegisterInput,
+} from '@/validations/v1/modules/auth.validations';
 import jwt from 'jsonwebtoken';
 import appConfig from '@/configs/app.config';
 import { RoleFactory } from '@/tests/factories/role/role.factory';
@@ -80,11 +83,9 @@ export class UserFactory {
   }
 
   static generateJwtToken(userId: number): string {
-    const token = jwt.sign(
-      { id: userId }, 
-      appConfig.jwtSecret as string,
-      { expiresIn: '24h' }
-    );
+    const token = jwt.sign({ id: userId }, appConfig.jwtSecret as string, {
+      expiresIn: '24h',
+    });
 
     return token;
   }

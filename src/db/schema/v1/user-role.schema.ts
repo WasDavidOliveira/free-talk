@@ -31,4 +31,4 @@ export const userRoleRelations = relations(userRoles, ({ one }) => ({
     fields: [userRoles.roleId],
     references: [roles.id],
   }),
-})); 
+}));
