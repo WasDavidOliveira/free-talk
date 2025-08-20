@@ -5,7 +5,7 @@ import { StatusCode } from '@/constants/status-code.constants';
 import { paginationSchema, PaginationInput } from '@/validations/v1/base/pagination.validations';
 import { PaginationResource } from '@/resources/v1/base/pagination/pagination.resource';
 import { CreateConversationInput } from '@/validations/v1/modules/conversation.validations';
-import { ConversationResource } from '@/resources/v1/modules/conversation/conversation.resource';
+import ConversationResource from '@/resources/v1/modules/conversation/conversation.resource';
 
 export class ConversationController {
   index = catchAsync(async (req: Request<{}, {}, {}, PaginationInput>, res: Response) => {
@@ -27,7 +27,7 @@ export class ConversationController {
 
     res.status(StatusCode.CREATED).json({
       message: 'Conversa criada com sucesso.',
-      data: ConversationResource.toResponse(conversation),
+      data: await ConversationResource.toResponse(conversation),
     });
   });
 
@@ -39,7 +39,7 @@ export class ConversationController {
 
     res.status(StatusCode.OK).json({
       message: 'Conversa encontrada com sucesso.',
-      data: ConversationResource.toResponse(conversation),
+      data: await ConversationResource.toResponse(conversation),
     });
   });
 }

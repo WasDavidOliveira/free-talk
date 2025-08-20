@@ -148,6 +148,5 @@ describe('Conversas', () => {
       expect(response.body.data.createdBy).toBeDefined();
       expect(response.body.data.createdBy.id).toBe(user.id);
     });
-
   });
 });
