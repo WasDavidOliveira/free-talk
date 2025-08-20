@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import ConversationController from '@/controllers/v1/modules/conversation/conversation.controller';
+import ConversationMessagesController from '@/controllers/v1/modules/conversation/conversation-messages.controller';
 import { validateRequest } from '@/middlewares/validation/validate-request.middlewares';
 import { paginationSchema } from '@/validations/v1/base/pagination.validations';
 import { authMiddleware } from '@/middlewares/auth/auth.middlewares';
@@ -10,6 +11,13 @@ import {
   addParticipantsSchema,
   removeParticipantSchema,
 } from '@/validations/v1/modules/conversation.validations';
+import {
+  createMessageSchema,
+  updateMessageSchema,
+  messageParamsSchema,
+  conversationParamsSchema,
+  markAsReadSchema,
+} from '@/validations/v1/modules/message.validations';
 
 const router: Router = Router();
 
@@ -69,6 +77,59 @@ router.get(
   authMiddleware,
   validateRequest(parametroConversationSchema),
   ConversationController.getParticipants
+);
+
+router.get(
+  '/:conversationId/messages',
+  authMiddleware,
+  validateRequest(conversationParamsSchema),
+  validateRequest(paginationSchema),
+  ConversationMessagesController.index
+);
+
+router.get(
+  '/:conversationId/messages/unread-count',
+  authMiddleware,
+  validateRequest(conversationParamsSchema),
+  ConversationMessagesController.getUnreadCount
+);
+
+router.get(
+  '/:conversationId/messages/:messageId',
+  authMiddleware,
+  validateRequest(messageParamsSchema),
+  ConversationMessagesController.show
+);
+
+router.post(
+  '/:conversationId/messages',
+  authMiddleware,
+  validateRequest(conversationParamsSchema),
+  validateRequest(createMessageSchema),
+  ConversationMessagesController.create
+);
+
+router.post(
+  '/:conversationId/messages/mark-as-read',
+  authMiddleware,
+  validateRequest(conversationParamsSchema),
+  validateRequest(markAsReadSchema),
+  ConversationMessagesController.markAsRead
+);
+
+router.put(
+  '/:conversationId/messages/:messageId',
+  authMiddleware,
+  validateRequest(messageParamsSchema),
+  validateRequest(updateMessageSchema),
+  ConversationMessagesController.update
+);
+
+router.delete(
+  '/:conversationId/messages/:messageId',
+  authMiddleware,
+  validateRequest(messageParamsSchema),
+  ConversationMessagesController.delete
 );
 
 export default router;
