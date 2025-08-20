@@ -114,7 +114,7 @@ export class ConversationService {
     );
 
     if (!isParticipant) {
-      throw new NotFoundError('Usuário não é participante desta conversa');
+      throw new NotFoundError('Conversa não encontrada');
     }
 
     await ConversationRepository.removeParticipant(conversationId, participantUserId);
@@ -133,7 +133,7 @@ export class ConversationService {
     }
 
     const participants = await ConversationRepository.getParticipants(conversationId);
-    
+
     return participants;
   }
 }
