@@ -4,6 +4,8 @@ import ConversationService from '@/services/v1/modules/conversation/conversation
 import { StatusCode } from '@/constants/status-code.constants';
 import { paginationSchema, PaginationInput } from '@/validations/v1/base/pagination.validations';
 import { PaginationResource } from '@/resources/v1/base/pagination/pagination.resource';
+import { CreateConversationInput } from '@/validations/v1/modules/conversation.validations';
+import { ConversationResource } from '@/resources/v1/modules/conversation/conversation.resource';
 
 export class ConversationController {
   index = catchAsync(async (req: Request<{}, {}, {}, PaginationInput>, res: Response) => {
@@ -15,6 +17,29 @@ export class ConversationController {
     res.status(StatusCode.OK).json({
       message: 'Conversas listadas com sucesso.',
       ...PaginationResource.fromRepositoryResult(conversations),
+    });
+  });
+
+  create = catchAsync(async (req: Request<{}, {}, CreateConversationInput>, res: Response) => {
+    const userId = req.userId;
+    const conversationData: CreateConversationInput = req.body;
+    const conversation = await ConversationService.create(userId, conversationData);
+
+    res.status(StatusCode.CREATED).json({
+      message: 'Conversa criada com sucesso.',
+      data: ConversationResource.toResponse(conversation),
+    });
+  });
+
+  show = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.userId;
+    const { id } = req.params;
+
+    const conversation = await ConversationService.show(userId, parseInt(id));
+
+    res.status(StatusCode.OK).json({
+      message: 'Conversa encontrada com sucesso.',
+      data: ConversationResource.toResponse(conversation),
     });
   });
 }

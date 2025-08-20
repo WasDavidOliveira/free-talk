@@ -4,22 +4,19 @@ export const paginationSchema = z.object({
   query: z
     .object({
       page: z
-        .string()
-        .transform((val) => parseInt(val))
+        .coerce.number()
         .openapi({
           description: 'Número da página',
           example: 1,
         }).optional(),
       per_page: z
-        .string()
-        .transform((val) => parseInt(val))
+        .coerce.number()
         .openapi({
           description: 'Limite de itens por página',
           example: 10,
         }).optional(),
       offset: z
-        .string()
-        .transform((val) => parseInt(val))
+        .coerce.number()
         .openapi({
           description: 'Offset de itens',
           example: 0,

@@ -61,6 +61,21 @@ class ConversationRepository {
       where: eq(conversation.id, id),
       with: {
         createdBy: true,
+        messages: true,
+        participants: true,
+      },
+    });
+
+    return conversationResult;
+  }
+  
+  async findByIdAndUserId({ id, userId }: { id: number, userId: number }) {
+    const conversationResult = await db.query.conversation.findFirst({
+      where: and(eq(conversation.id, id), eq(conversation.createdBy, userId)),
+      with: {
+        createdBy: true,
+        messages: true,
+        participants: true,
       },
     });
 

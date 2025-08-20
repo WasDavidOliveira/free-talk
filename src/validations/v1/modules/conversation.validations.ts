@@ -34,7 +34,7 @@ export const updateConversationSchema = z.object({
 
 export const parametroConversationSchema = z.object({
   params: z.object({
-    id: z.number({ required_error: 'ID é obrigatório' }).openapi({
+    id: z.coerce.number({ required_error: 'ID é obrigatório' }).openapi({
       description: 'ID da conversa',
       example: 1,
     }),
