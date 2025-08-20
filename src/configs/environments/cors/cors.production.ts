@@ -1,7 +1,7 @@
 import { CorsOptions } from 'cors';
 
 export const productionCorsConfig: CorsOptions = {
-  origin: ['https://nosso-futuro.com.br'],
+  origin: ['*'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],
