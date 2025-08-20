@@ -10,6 +10,8 @@ import { PaginationResource } from '@/resources/v1/base/pagination/pagination.re
 import {
   CreateConversationInput,
   UpdateConversationInput,
+  AddParticipantsInput,
+  RemoveParticipantInput,
 } from '@/validations/v1/modules/conversation.validations';
 import ConversationResource from '@/resources/v1/modules/conversation/conversation.resource';
 
@@ -81,6 +83,57 @@ export class ConversationController {
 
     res.status(StatusCode.OK).json({
       message: 'Conversa deletada com sucesso.',
+    });
+  });
+
+  addParticipants = catchAsync(
+    async (req: Request<{ id: string }, {}, AddParticipantsInput>, res: Response) => {
+      const userId = req.userId;
+      const { id } = req.params;
+      const participantsData = req.body;
+
+      const participants = await ConversationService.addParticipants(
+        userId,
+        parseInt(id),
+        participantsData
+      );
+
+      res.status(StatusCode.CREATED).json({
+        message: 'Participantes adicionados com sucesso.',
+        data: participants,
+      });
+    }
+  );
+
+  removeParticipant = catchAsync(
+    async (req: Request<RemoveParticipantInput>, res: Response) => {
+      const requestUserId = req.userId;
+      const { id, userId } = req.params;
+
+      await ConversationService.removeParticipant(
+        requestUserId,
+        id,
+        userId
+      );
+
+      res.status(StatusCode.OK).json({
+        message: 'Participante removido com sucesso.',
+      });
+    }
+  );
+
+  getParticipants = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.userId;
+    const { id } = req.params;
+
+    const participants = await ConversationService.getParticipants(
+      userId,
+      parseInt(id)
+    );
+
+    res.status(StatusCode.OK).json({
+      message: 'Participantes listados com sucesso.',
+      data: participants,
     });
   });
 }

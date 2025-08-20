@@ -1,10 +1,15 @@
 import { db } from '@/db/db.connection';
 import { conversation } from '@/db/schema/v1/conversation.schema';
-import { and, desc, eq, ilike, sql, asc } from 'drizzle-orm';
+import { conversationParticipant } from '@/db/schema/v1/conversation-participant.schema';
+import { and, desc, eq, ilike, sql, asc, inArray } from 'drizzle-orm';
 import { PaginationInput } from '@/validations/v1/base/pagination.validations';
 import { CreateConversationModel } from '@/types/models/v1/conversation.types';
 import { PAGINATION_DEFAULT_VALUES } from '@/constants/pagination.constants';
 import { UpdateConversationInput } from '@/validations/v1/modules/conversation.validations';
+import { 
+  CreateConversationParticipantModel,
+  ConversationParticipantWithUser 
+} from '@/types/models/v1/conversation-participant.types';
 
 class ConversationRepository {
   async index(userId: number, pagination: PaginationInput) {
@@ -81,7 +86,11 @@ class ConversationRepository {
       with: {
         createdBy: true,
         messages: true,
-        participants: true,
+        participants: {
+          with: {
+            user: true,
+          },
+        },
       },
     });
 
@@ -118,6 +127,78 @@ class ConversationRepository {
 
   async delete(conversationId: number) {
     await db.delete(conversation).where(eq(conversation.id, conversationId));
+  }
+
+  async addParticipants(conversationId: number, userIds: number[]) {
+    const participantsData: CreateConversationParticipantModel[] = userIds.map(
+      (userId) => ({
+        conversationId,
+        userId,
+      })
+    );
+
+    const participants = await db
+      .insert(conversationParticipant)
+      .values(participantsData)
+      .returning();
+
+    return participants;
+  }
+
+  async removeParticipant(conversationId: number, userId: number) {
+    await db
+      .delete(conversationParticipant)
+      .where(
+        and(
+          eq(conversationParticipant.conversationId, conversationId),
+          eq(conversationParticipant.userId, userId)
+        )
+      );
+  }
+
+  async getParticipants(conversationId: number): Promise<ConversationParticipantWithUser[]> {
+    const participants = await db.query.conversationParticipant.findMany({
+      where: eq(conversationParticipant.conversationId, conversationId),
+      with: {
+        user: true,
+      },
+    });
+
+    return participants.map(participant => ({
+      id: participant.id,
+      conversationId: participant.conversationId,
+      userId: participant.userId,
+      user: {
+        id: participant.user.id,
+        name: participant.user.name,
+        email: participant.user.email,
+      },
+    }));
+  }
+
+  async isParticipant(conversationId: number, userId: number): Promise<boolean> {
+    const participant = await db.query.conversationParticipant.findFirst({
+      where: and(
+        eq(conversationParticipant.conversationId, conversationId),
+        eq(conversationParticipant.userId, userId)
+      ),
+    });
+
+    return !!participant;
+  }
+
+  async getExistingParticipants(conversationId: number, userIds: number[]): Promise<number[]> {
+    const existingParticipants = await db
+      .select({ userId: conversationParticipant.userId })
+      .from(conversationParticipant)
+      .where(
+        and(
+          eq(conversationParticipant.conversationId, conversationId),
+          inArray(conversationParticipant.userId, userIds)
+        )
+      );
+
+    return existingParticipants.map(p => p.userId);
   }
 }
 

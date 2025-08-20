@@ -222,4 +222,25 @@ describe('Conversas', () => {
       expect(response.body.data).toBeUndefined();
     });
   });
+
+  describe('(addParticipants) POST /api/v1/conversations/:id/participants', () => {
+    it('(addParticipants) deve adicionar participantes a uma conversa com sucesso', async () => {
+      const conversation = await ConversationFactory.createConversation({
+        createdBy: user.id,
+      });
+
+      const user2 = await UserFactory.createUser();
+
+      const response = await request(server)
+        .post(`${apiUrl}/${conversation.id}/participants`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ userIds: [user2.user.id] });
+      
+      expect(response.status).toBe(StatusCode.CREATED);
+      expect(response.body.message).toBe('Participantes adicionados com sucesso.');
+      expect(response.body.data).toBeDefined();
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.data[0].userId).toBe(user2.user.id);
+    });
+  });
 });

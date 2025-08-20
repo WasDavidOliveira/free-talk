@@ -7,6 +7,8 @@ import {
   createConversationSchema,
   parametroConversationSchema,
   updateConversationSchema,
+  addParticipantsSchema,
+  removeParticipantSchema,
 } from '@/validations/v1/modules/conversation.validations';
 
 const router: Router = Router();
@@ -45,6 +47,28 @@ router.delete(
   authMiddleware,
   validateRequest(parametroConversationSchema),
   ConversationController.delete
+);
+
+router.post(
+  '/:id/participants',
+  authMiddleware,
+  validateRequest(parametroConversationSchema),
+  validateRequest(addParticipantsSchema),
+  ConversationController.addParticipants
+);
+
+router.delete(
+  '/:id/participants/:userId',
+  authMiddleware,
+  validateRequest(removeParticipantSchema),
+  ConversationController.removeParticipant
+);
+
+router.get(
+  '/:id/participants',
+  authMiddleware,
+  validateRequest(parametroConversationSchema),
+  ConversationController.getParticipants
 );
 
 export default router;
