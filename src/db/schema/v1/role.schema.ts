@@ -1,6 +1,6 @@
-import { pgTable, serial, varchar, timestamp } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
 import { userRoles } from '@/db/schema/v1/user-role.schema';
+import { relations } from 'drizzle-orm';
+import { pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { rolePermissions } from './role-permission.schema';
 
 export const roles = pgTable('roles', {

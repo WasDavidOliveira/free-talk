@@ -1,5 +1,5 @@
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 
 export const getOpenAPISpec = () => {
   const openapiPath = path.resolve(process.cwd(), 'src/docs/openapi.json');

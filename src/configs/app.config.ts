@@ -15,9 +15,7 @@ const createDatabaseUrl = (): string => {
 export const appConfig = {
   port: process.env.PORT || 3000,
   nodeEnv: process.env.NODE_ENV || 'development',
-  corsAllowedOrigins: process.env.CORS_ALLOWED_ORIGINS?.split(',') || [
-    'http://localhost:5173',
-  ],
+  corsAllowedOrigins: process.env.CORS_ALLOWED_ORIGINS?.split(',') || ['http://localhost:5173'],
   databaseUrl: createDatabaseUrl(),
   jwtSecret: process.env.JWT_SECRET || '',
   jwtExpiration: process.env.JWT_EXPIRATION || '1h',

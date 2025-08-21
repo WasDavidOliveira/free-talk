@@ -1,14 +1,14 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import request from 'supertest';
-import app from '@/server';
-import { UserFactory } from '@/tests/factories/auth/user.factory';
-import { MessageFactory } from '@/tests/factories/message/message.factory';
-import { ConversationFactory } from '@/tests/factories/conversation/conversation.factory';
-import { Server } from 'http';
-import setupTestDB from '@/tests/hooks/setup-db';
-import { UserModel } from '@/types/models/v1/auth.types';
 import { StatusCode } from '@/constants/status-code.constants';
 import { MessageType } from '@/enums/v1/modules/chat/message-types.enum';
+import app from '@/server';
+import { UserFactory } from '@/tests/factories/auth/user.factory';
+import { ConversationFactory } from '@/tests/factories/conversation/conversation.factory';
+import { MessageFactory } from '@/tests/factories/message/message.factory';
+import setupTestDB from '@/tests/hooks/setup-db';
+import { UserModel } from '@/types/models/v1/auth.types';
+import { Server } from 'http';
+import request from 'supertest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 let server: Server;
 let token: string;
@@ -32,10 +32,7 @@ describe('Mensagens', () => {
 
   describe('(index) GET /api/v1/conversations/:conversationId/messages', () => {
     it('deve listar mensagens da conversa com sucesso', async () => {
-      const { conversation } = await MessageFactory.createConversationWithMessages(
-        user.id,
-        5
-      );
+      const { conversation } = await MessageFactory.createConversationWithMessages(user.id, 5);
 
       const response = await request(server)
         .get(`/api/v1/conversations/${conversation.id}/messages`)
@@ -73,10 +70,7 @@ describe('Mensagens', () => {
     });
 
     it('deve funcionar com paginação', async () => {
-      const { conversation } = await MessageFactory.createConversationWithMessages(
-        user.id,
-        15
-      );
+      const { conversation } = await MessageFactory.createConversationWithMessages(user.id, 15);
 
       const response = await request(server)
         .get(`/api/v1/conversations/${conversation.id}/messages?page=1&per_page=5`)
@@ -93,10 +87,7 @@ describe('Mensagens', () => {
 
   describe('(show) GET /api/v1/conversations/:conversationId/messages/:messageId', () => {
     it('deve buscar mensagem específica com sucesso', async () => {
-      const { conversation, messages } = await MessageFactory.createConversationWithMessages(
-        user.id,
-        3
-      );
+      const { conversation, messages } = await MessageFactory.createConversationWithMessages(user.id, 3);
       const targetMessage = messages[0];
 
       const response = await request(server)
@@ -125,10 +116,7 @@ describe('Mensagens', () => {
 
     it('deve retornar erro 403 se usuário não tem acesso à conversa', async () => {
       const { user: otherUser } = await UserFactory.createUser();
-      const { conversation, messages } = await MessageFactory.createConversationWithMessages(
-        otherUser.id,
-        1
-      );
+      const { conversation, messages } = await MessageFactory.createConversationWithMessages(otherUser.id, 1);
 
       const response = await request(server)
         .get(`/api/v1/conversations/${conversation.id}/messages/${messages[0].id}`)
@@ -227,10 +215,7 @@ describe('Mensagens', () => {
 
   describe('(update) PUT /api/v1/conversations/:conversationId/messages/:messageId', () => {
     it('deve atualizar mensagem própria com sucesso', async () => {
-      const { conversation, messages } = await MessageFactory.createConversationWithMessages(
-        user.id,
-        1
-      );
+      const { conversation, messages } = await MessageFactory.createConversationWithMessages(user.id, 1);
       const targetMessage = messages[0];
 
       const updateData = {
@@ -250,10 +235,7 @@ describe('Mensagens', () => {
 
     it('deve retornar erro 403 se tentar editar mensagem de outro usuário', async () => {
       const { user: otherUser } = await UserFactory.createUser();
-      const { conversation, messages } = await MessageFactory.createConversationWithMessages(
-        otherUser.id,
-        1
-      );
+      const { conversation, messages } = await MessageFactory.createConversationWithMessages(otherUser.id, 1);
 
       await ConversationFactory.addParticipantsToConversation(conversation.id, [user]);
 
@@ -291,10 +273,7 @@ describe('Mensagens', () => {
 
   describe('(delete) DELETE /api/v1/conversations/:conversationId/messages/:messageId', () => {
     it('deve deletar mensagem própria com sucesso', async () => {
-      const { conversation, messages } = await MessageFactory.createConversationWithMessages(
-        user.id,
-        1
-      );
+      const { conversation, messages } = await MessageFactory.createConversationWithMessages(user.id, 1);
       const targetMessage = messages[0];
 
       const response = await request(server)
@@ -338,12 +317,9 @@ describe('Mensagens', () => {
 
   describe('(markAsRead) POST /api/v1/conversations/:conversationId/messages/mark-as-read', () => {
     it('deve marcar mensagens como lidas com sucesso', async () => {
-      const { conversation, messages } = await MessageFactory.createConversationWithMessages(
-        user.id,
-        3
-      );
+      const { conversation, messages } = await MessageFactory.createConversationWithMessages(user.id, 3);
 
-      const messageIds = messages.map(m => m.id);
+      const messageIds = messages.map((m) => m.id);
 
       const response = await request(server)
         .post(`/api/v1/conversations/${conversation.id}/messages/mark-as-read`)
@@ -372,11 +348,8 @@ describe('Mensagens', () => {
       const conversation1 = await ConversationFactory.createConversation({
         createdBy: user.id,
       });
-      
-      const { messages } = await MessageFactory.createConversationWithMessages(
-        user.id,
-        1
-      );
+
+      const { messages } = await MessageFactory.createConversationWithMessages(user.id, 1);
 
       const response = await request(server)
         .post(`/api/v1/conversations/${conversation1.id}/messages/mark-as-read`)
@@ -390,10 +363,7 @@ describe('Mensagens', () => {
 
   describe('(getUnreadCount) GET /api/v1/conversations/:conversationId/messages/unread-count', () => {
     it('deve retornar contagem de mensagens não lidas', async () => {
-      const { conversation } = await MessageFactory.createConversationWithMessages(
-        user.id,
-        5
-      );
+      const { conversation } = await MessageFactory.createConversationWithMessages(user.id, 5);
 
       const response = await request(server)
         .get(`/api/v1/conversations/${conversation.id}/messages/unread-count`)
@@ -422,10 +392,11 @@ describe('Mensagens', () => {
 
   describe('Cenários com múltiplos usuários', () => {
     it('deve permitir múltiplos usuários enviarem mensagens na mesma conversa', async () => {
-      const { conversation, users, messages: _messages } = await MessageFactory.createConversationWithMultipleUsers(
-        3,
-        2
-      );
+      const {
+        conversation,
+        users,
+        messages: _messages,
+      } = await MessageFactory.createConversationWithMultipleUsers(3, 2);
 
       const creatorToken = UserFactory.generateJwtToken(users[0].id);
 
@@ -435,9 +406,9 @@ describe('Mensagens', () => {
         .expect(StatusCode.OK);
 
       expect(response.body.data.length).toBe(6);
-      
+
       const senderIds = response.body.data.map((msg: any) => msg.sender.id);
-      
+
       const uniqueSenderIds = [...new Set(senderIds)];
       expect(uniqueSenderIds.length).toBe(3);
     });

@@ -1,20 +1,19 @@
-import { db } from '@/db/db.connection';
-import { conversation } from '@/db/schema/v1/conversation.schema';
-import { conversationParticipant } from '@/db/schema/v1/conversation-participant.schema';
-import { and, desc, eq, ilike, sql, asc, inArray } from 'drizzle-orm';
-import { PaginationInput } from '@/validations/v1/base/pagination.validations';
-import { CreateConversationModel } from '@/types/models/v1/conversation.types';
 import { PAGINATION_DEFAULT_VALUES } from '@/constants/pagination.constants';
-import { UpdateConversationInput } from '@/validations/v1/modules/conversation.validations';
-import { 
+import { db } from '@/db/db.connection';
+import { conversationParticipant } from '@/db/schema/v1/conversation-participant.schema';
+import { conversation } from '@/db/schema/v1/conversation.schema';
+import {
+  ConversationParticipantWithUser,
   CreateConversationParticipantModel,
-  ConversationParticipantWithUser 
 } from '@/types/models/v1/conversation-participant.types';
+import { CreateConversationModel } from '@/types/models/v1/conversation.types';
+import { PaginationInput } from '@/validations/v1/base/pagination.validations';
+import { UpdateConversationInput } from '@/validations/v1/modules/conversation.validations';
+import { and, asc, desc, eq, ilike, inArray, sql } from 'drizzle-orm';
 
 class ConversationRepository {
   async index(userId: number, pagination: PaginationInput) {
-    const { per_page, offset, search, order_by, page, order_direction } =
-      pagination;
+    const { per_page, offset, search, order_by, page, order_direction } = pagination;
 
     const itemsPerPage = per_page || PAGINATION_DEFAULT_VALUES.LIMIT;
     const currentPage = page || PAGINATION_DEFAULT_VALUES.PAGE;
@@ -26,14 +25,10 @@ class ConversationRepository {
     const hasSearch = searchTerm.trim().length > 0;
 
     const whereClause = hasSearch
-      ? and(
-        eq(conversation.createdBy, userId),
-        ilike(conversation.title, `%${searchTerm}%`)
-      )
+      ? and(eq(conversation.createdBy, userId), ilike(conversation.title, `%${searchTerm}%`))
       : eq(conversation.createdBy, userId);
 
-    const orderField =
-      orderBy === 'title' ? conversation.title : conversation.createdAt;
+    const orderField = orderBy === 'title' ? conversation.title : conversation.createdAt;
     const orderFunction = orderDirection === 'asc' ? asc : desc;
 
     const totalResult = await db
@@ -98,28 +93,16 @@ class ConversationRepository {
   }
 
   async create(conversationData: CreateConversationModel) {
-    const [newConversation] = await db
-      .insert(conversation)
-      .values(conversationData)
-      .returning();
+    const [newConversation] = await db.insert(conversation).values(conversationData).returning();
 
     return newConversation;
   }
 
-  async update(
-    userId: number,
-    conversationId: number,
-    conversationData: UpdateConversationInput
-  ) {
+  async update(userId: number, conversationId: number, conversationData: UpdateConversationInput) {
     const [updatedConversation] = await db
       .update(conversation)
       .set(conversationData)
-      .where(
-        and(
-          eq(conversation.id, conversationId),
-          eq(conversation.createdBy, userId)
-        )
-      )
+      .where(and(eq(conversation.id, conversationId), eq(conversation.createdBy, userId)))
       .returning();
 
     return updatedConversation;
@@ -130,17 +113,12 @@ class ConversationRepository {
   }
 
   async addParticipants(conversationId: number, userIds: number[]) {
-    const participantsData: CreateConversationParticipantModel[] = userIds.map(
-      (userId) => ({
-        conversationId,
-        userId,
-      })
-    );
+    const participantsData: CreateConversationParticipantModel[] = userIds.map((userId) => ({
+      conversationId,
+      userId,
+    }));
 
-    const participants = await db
-      .insert(conversationParticipant)
-      .values(participantsData)
-      .returning();
+    const participants = await db.insert(conversationParticipant).values(participantsData).returning();
 
     return participants;
   }
@@ -149,10 +127,7 @@ class ConversationRepository {
     await db
       .delete(conversationParticipant)
       .where(
-        and(
-          eq(conversationParticipant.conversationId, conversationId),
-          eq(conversationParticipant.userId, userId)
-        )
+        and(eq(conversationParticipant.conversationId, conversationId), eq(conversationParticipant.userId, userId)),
       );
   }
 
@@ -164,7 +139,7 @@ class ConversationRepository {
       },
     });
 
-    return participants.map(participant => ({
+    return participants.map((participant) => ({
       id: participant.id,
       conversationId: participant.conversationId,
       userId: participant.userId,
@@ -180,7 +155,7 @@ class ConversationRepository {
     const participant = await db.query.conversationParticipant.findFirst({
       where: and(
         eq(conversationParticipant.conversationId, conversationId),
-        eq(conversationParticipant.userId, userId)
+        eq(conversationParticipant.userId, userId),
       ),
     });
 
@@ -194,11 +169,11 @@ class ConversationRepository {
       .where(
         and(
           eq(conversationParticipant.conversationId, conversationId),
-          inArray(conversationParticipant.userId, userIds)
-        )
+          inArray(conversationParticipant.userId, userIds),
+        ),
       );
 
-    return existingParticipants.map(p => p.userId);
+    return existingParticipants.map((p) => p.userId);
   }
 }
 

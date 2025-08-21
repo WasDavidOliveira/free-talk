@@ -1,8 +1,8 @@
+import { db } from '@/db/db.connection';
 import { user } from '@/db/schema/v1/user.schema';
 import { CreateUserModel, UserModel } from '@/types/models/v1/auth.types';
-import { db } from '@/db/db.connection';
-import { eq } from 'drizzle-orm';
 import { ConflictError } from '@/utils/core/app-error.utils';
+import { eq } from 'drizzle-orm';
 
 class UserRepository {
   async findById(id: number): Promise<UserModel | null> {
@@ -12,11 +12,7 @@ class UserRepository {
   }
 
   async findByEmail(email: string): Promise<UserModel | null> {
-    const users = await db
-      .select()
-      .from(user)
-      .where(eq(user.email, email))
-      .limit(1);
+    const users = await db.select().from(user).where(eq(user.email, email)).limit(1);
 
     return users[0] || null;
   }
@@ -27,12 +23,7 @@ class UserRepository {
 
       return newUser;
     } catch (error: unknown) {
-      if (
-        typeof error === 'object' &&
-        error !== null &&
-        'code' in error &&
-        'detail' in error
-      ) {
+      if (typeof error === 'object' && error !== null && 'code' in error && 'detail' in error) {
         const dbError = error as { code: string; detail: string };
 
         if (dbError.code === '23505') {

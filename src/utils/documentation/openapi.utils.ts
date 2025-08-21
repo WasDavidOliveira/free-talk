@@ -1,22 +1,18 @@
-import { createDocument } from 'zod-openapi';
-import path from 'path';
-import fs from 'fs';
-import * as z from 'zod';
+import { loginSchema, registerSchema, userResponseSchema } from '@/validations/v1/modules/auth.validations';
 import {
-  loginSchema,
-  registerSchema,
-  userResponseSchema,
-} from '@/validations/v1/modules/auth.validations';
-import {
+  addParticipantsSchema,
   createConversationSchema,
   updateConversationSchema,
-  addParticipantsSchema,
 } from '@/validations/v1/modules/conversation.validations';
 import {
   createMessageSchema,
-  updateMessageSchema,
   markAsReadSchema,
+  updateMessageSchema,
 } from '@/validations/v1/modules/message.validations';
+import fs from 'fs';
+import path from 'path';
+import * as z from 'zod';
+import { createDocument } from 'zod-openapi';
 
 export const generateOpenAPIDocument = () => {
   const loginResponseSchema = z
@@ -259,7 +255,7 @@ export const generateOpenAPIDocument = () => {
           },
         },
       },
-      
+
       '/api/v1/conversations': {
         get: {
           tags: ['Conversas'],
@@ -328,7 +324,7 @@ export const generateOpenAPIDocument = () => {
           },
         },
       },
-      
+
       '/api/v1/conversations/{id}': {
         get: {
           tags: ['Conversas'],
@@ -428,7 +424,7 @@ export const generateOpenAPIDocument = () => {
           },
         },
       },
-      
+
       '/api/v1/conversations/{id}/participants': {
         get: {
           tags: ['Participantes'],
@@ -500,7 +496,7 @@ export const generateOpenAPIDocument = () => {
           },
         },
       },
-      
+
       '/api/v1/conversations/{id}/participants/{userId}': {
         delete: {
           tags: ['Participantes'],
@@ -539,7 +535,7 @@ export const generateOpenAPIDocument = () => {
           },
         },
       },
-      
+
       '/api/v1/conversations/{conversationId}/messages': {
         get: {
           tags: ['Mensagens'],
@@ -619,7 +615,7 @@ export const generateOpenAPIDocument = () => {
           },
         },
       },
-      
+
       '/api/v1/conversations/{conversationId}/messages/{messageId}': {
         get: {
           tags: ['Mensagens'],
@@ -743,7 +739,7 @@ export const generateOpenAPIDocument = () => {
           },
         },
       },
-      
+
       '/api/v1/conversations/{conversationId}/messages/mark-as-read': {
         post: {
           tags: ['Mensagens'],
@@ -784,7 +780,7 @@ export const generateOpenAPIDocument = () => {
           },
         },
       },
-      
+
       '/api/v1/conversations/{conversationId}/messages/unread-count': {
         get: {
           tags: ['Mensagens'],

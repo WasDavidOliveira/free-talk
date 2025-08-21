@@ -1,23 +1,21 @@
-import { Request, Response } from 'express';
-import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
-import RoleService from '@/services/v1/modules/role/role.service';
 import { StatusCode } from '@/constants/status-code.constants';
-import { CreateRoleInput } from '@/validations/v1/modules/role.validations';
 import { RoleResource } from '@/resources/v1/modules/role/role.resource';
+import RoleService from '@/services/v1/modules/role/role.service';
+import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
+import { CreateRoleInput } from '@/validations/v1/modules/role.validations';
+import { Request, Response } from 'express';
 
 export class RoleController {
-  create = catchAsync(
-    async (req: Request<{}, {}, CreateRoleInput>, res: Response) => {
-      const roleData: CreateRoleInput = req.body;
+  create = catchAsync(async (req: Request<{}, {}, CreateRoleInput>, res: Response) => {
+    const roleData: CreateRoleInput = req.body;
 
-      const role = await RoleService.create(roleData);
+    const role = await RoleService.create(roleData);
 
-      res.status(StatusCode.CREATED).json({
-        message: 'Role criada com sucesso.',
-        data: RoleResource.toResponse(role),
-      });
-    }
-  );
+    res.status(StatusCode.CREATED).json({
+      message: 'Role criada com sucesso.',
+      data: RoleResource.toResponse(role),
+    });
+  });
 
   show = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;

@@ -1,6 +1,6 @@
-import winston from 'winston';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+import winston from 'winston';
 
 const { combine, timestamp, printf, colorize } = winston.format;
 
@@ -21,11 +21,7 @@ class Logger {
     const currentDate = this.getCurrentDate();
 
     this.logger = winston.createLogger({
-      format: combine(
-        timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        colorize(),
-        logFormat
-      ),
+      format: combine(timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), colorize(), logFormat),
       transports: [
         new winston.transports.Console(),
         new winston.transports.File({
@@ -46,9 +42,7 @@ class Logger {
 
     return fs
       .readdirSync(this.logsDir)
-      .filter((date) =>
-        fs.statSync(path.join(this.logsDir, date)).isDirectory()
-      )
+      .filter((date) => fs.statSync(path.join(this.logsDir, date)).isDirectory())
       .map((date) => ({
         date,
         files: fs.readdirSync(path.join(this.logsDir, date)),

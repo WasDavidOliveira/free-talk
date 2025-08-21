@@ -1,23 +1,21 @@
-import { Request, Response } from 'express';
-import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
-import PermissionService from '@/services/v1/modules/permission/permission.service';
 import { StatusCode } from '@/constants/status-code.constants';
-import { CreatePermissionInput } from '@/validations/v1/modules/permission.validations';
 import { PermissionResource } from '@/resources/v1/modules/permission/permission.resource';
+import PermissionService from '@/services/v1/modules/permission/permission.service';
+import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
+import { CreatePermissionInput } from '@/validations/v1/modules/permission.validations';
+import { Request, Response } from 'express';
 
 export class PermissionController {
-  create = catchAsync(
-    async (req: Request<{}, {}, CreatePermissionInput>, res: Response) => {
-      const permissionData: CreatePermissionInput = req.body;
+  create = catchAsync(async (req: Request<{}, {}, CreatePermissionInput>, res: Response) => {
+    const permissionData: CreatePermissionInput = req.body;
 
-      const permission = await PermissionService.create(permissionData);
+    const permission = await PermissionService.create(permissionData);
 
-      res.status(StatusCode.CREATED).json({
-        message: 'Permissão criada com sucesso.',
-        data: PermissionResource.toResponse(permission),
-      });
-    }
-  );
+    res.status(StatusCode.CREATED).json({
+      message: 'Permissão criada com sucesso.',
+      data: PermissionResource.toResponse(permission),
+    });
+  });
 
   show = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -34,10 +32,7 @@ export class PermissionController {
     const { id } = req.params;
     const permissionData: CreatePermissionInput = req.body;
 
-    const permission = await PermissionService.update(
-      Number(id),
-      permissionData
-    );
+    const permission = await PermissionService.update(Number(id), permissionData);
 
     res.status(StatusCode.OK).json({
       message: 'Permissão atualizada com sucesso.',

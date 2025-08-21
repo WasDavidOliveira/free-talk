@@ -6,13 +6,10 @@ extendZodWithOpenApi(z);
 export const loginSchema = z.object({
   body: z
     .object({
-      email: z
-        .string({ required_error: 'Email é obrigatório' })
-        .email('Email inválido')
-        .openapi({
-          description: 'Email do usuário',
-          example: 'usuario@exemplo.com',
-        }),
+      email: z.string({ required_error: 'Email é obrigatório' }).email('Email inválido').openapi({
+        description: 'Email do usuário',
+        example: 'usuario@exemplo.com',
+      }),
       password: z
         .string({ required_error: 'Senha é obrigatória' })
         .min(6, 'A senha deve ter no mínimo 6 caracteres')
@@ -38,13 +35,10 @@ export const registerSchema = z.object({
           description: 'Nome do usuário',
           example: 'João Silva',
         }),
-      email: z
-        .string({ required_error: 'Email é obrigatório' })
-        .email('Email inválido')
-        .openapi({
-          description: 'Email do usuário',
-          example: 'usuario@exemplo.com',
-        }),
+      email: z.string({ required_error: 'Email é obrigatório' }).email('Email inválido').openapi({
+        description: 'Email do usuário',
+        example: 'usuario@exemplo.com',
+      }),
       password: z
         .string({ required_error: 'Senha é obrigatória' })
         .min(6, 'A senha deve ter no mínimo 6 caracteres')

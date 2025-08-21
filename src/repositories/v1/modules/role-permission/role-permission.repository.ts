@@ -1,14 +1,11 @@
 import { db } from '@/db/db.connection';
-import { rolePermissions } from '@/db/schema/v1/role-permission.schema';
 import { permissions } from '@/db/schema/v1/permission.schema';
+import { rolePermissions } from '@/db/schema/v1/role-permission.schema';
 import { eq } from 'drizzle-orm';
 
 class RolePermissionRepository {
   static async attach(roleId: number, permissionId: number) {
-    const [newRolePermission] = await db
-      .insert(rolePermissions)
-      .values({ roleId, permissionId })
-      .returning();
+    const [newRolePermission] = await db.insert(rolePermissions).values({ roleId, permissionId }).returning();
 
     return newRolePermission;
   }
@@ -16,17 +13,11 @@ class RolePermissionRepository {
   static async detach(roleId: number, permissionId: number) {
     await db
       .delete(rolePermissions)
-      .where(
-        eq(rolePermissions.roleId, roleId) &&
-          eq(rolePermissions.permissionId, permissionId)
-      );
+      .where(eq(rolePermissions.roleId, roleId) && eq(rolePermissions.permissionId, permissionId));
   }
 
   static async findByRolePermissionByRoleId(roleId: number) {
-    const rolePermission = await db
-      .select()
-      .from(rolePermissions)
-      .where(eq(rolePermissions.roleId, roleId));
+    const rolePermission = await db.select().from(rolePermissions).where(eq(rolePermissions.roleId, roleId));
 
     return rolePermission;
   }

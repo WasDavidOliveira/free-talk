@@ -1,18 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
-import { AppError } from '@/utils/core/app-error.utils';
-import { ZodError } from 'zod';
-import { NotFoundError } from '@/utils/core/app-error.utils';
 import { StatusCode } from '@/constants/status-code.constants';
 import { PostgresError, ValidationErrorItem } from '@/types/core/errors.types';
+import { AppError, NotFoundError } from '@/utils/core/app-error.utils';
+import { NextFunction, Request, Response } from 'express';
+import { ZodError } from 'zod';
 
 type ErrorTypes = Error | AppError | PostgresError | ZodError;
 
-export const errorHandler = (
-  err: ErrorTypes,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const errorHandler = (err: ErrorTypes, req: Request, res: Response, next: NextFunction) => {
   if (res.headersSent) {
     return next(err);
   }
@@ -73,12 +67,6 @@ export const errorHandler = (
   });
 };
 
-export const notFoundHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  next(
-    new NotFoundError(`Rota não encontrada: ${req.method} ${req.originalUrl}`)
-  );
+export const notFoundHandler = (req: Request, res: Response, next: NextFunction) => {
+  next(new NotFoundError(`Rota não encontrada: ${req.method} ${req.originalUrl}`));
 };

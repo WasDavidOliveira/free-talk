@@ -1,50 +1,40 @@
-import { Request, Response } from 'express';
-import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
-import ConversationService from '@/services/v1/modules/conversation/conversation.service';
 import { StatusCode } from '@/constants/status-code.constants';
-import {
-  paginationSchema,
-  PaginationInput,
-} from '@/validations/v1/base/pagination.validations';
 import { PaginationResource } from '@/resources/v1/base/pagination/pagination.resource';
-import {
-  CreateConversationInput,
-  UpdateConversationInput,
-  AddParticipantsInput,
-  RemoveParticipantInput,
-} from '@/validations/v1/modules/conversation.validations';
 import ConversationResource from '@/resources/v1/modules/conversation/conversation.resource';
+import ConversationService from '@/services/v1/modules/conversation/conversation.service';
+import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
+import { PaginationInput, paginationSchema } from '@/validations/v1/base/pagination.validations';
+import {
+  AddParticipantsInput,
+  CreateConversationInput,
+  RemoveParticipantInput,
+  UpdateConversationInput,
+} from '@/validations/v1/modules/conversation.validations';
+import { Request, Response } from 'express';
 
 export class ConversationController {
-  index = catchAsync(
-    async (req: Request<{}, {}, {}, PaginationInput>, res: Response) => {
-      const userId = req.userId;
-      const pagination = paginationSchema.parse({ query: req.query }).query;
+  index = catchAsync(async (req: Request<{}, {}, {}, PaginationInput>, res: Response) => {
+    const userId = req.userId;
+    const pagination = paginationSchema.parse({ query: req.query }).query;
 
-      const conversations = await ConversationService.index(userId, pagination);
+    const conversations = await ConversationService.index(userId, pagination);
 
-      res.status(StatusCode.OK).json({
-        message: 'Conversas listadas com sucesso.',
-        ...PaginationResource.fromRepositoryResult(conversations),
-      });
-    }
-  );
+    res.status(StatusCode.OK).json({
+      message: 'Conversas listadas com sucesso.',
+      ...PaginationResource.fromRepositoryResult(conversations),
+    });
+  });
 
-  create = catchAsync(
-    async (req: Request<{}, {}, CreateConversationInput>, res: Response) => {
-      const userId = req.userId;
-      const conversationData: CreateConversationInput = req.body;
-      const conversation = await ConversationService.create(
-        userId,
-        conversationData
-      );
+  create = catchAsync(async (req: Request<{}, {}, CreateConversationInput>, res: Response) => {
+    const userId = req.userId;
+    const conversationData: CreateConversationInput = req.body;
+    const conversation = await ConversationService.create(userId, conversationData);
 
-      res.status(StatusCode.CREATED).json({
-        message: 'Conversa criada com sucesso.',
-        data: await ConversationResource.toResponse(conversation),
-      });
-    }
-  );
+    res.status(StatusCode.CREATED).json({
+      message: 'Conversa criada com sucesso.',
+      data: await ConversationResource.toResponse(conversation),
+    });
+  });
 
   show = catchAsync(async (req: Request, res: Response) => {
     const userId = req.userId;
@@ -63,11 +53,7 @@ export class ConversationController {
     const { id } = req.params;
     const conversationData: UpdateConversationInput = req.body;
 
-    const conversation = await ConversationService.update(
-      userId,
-      parseInt(id),
-      conversationData
-    );
+    const conversation = await ConversationService.update(userId, parseInt(id), conversationData);
 
     res.status(StatusCode.OK).json({
       message: 'Conversa atualizada com sucesso.',
@@ -86,50 +72,35 @@ export class ConversationController {
     });
   });
 
-  addParticipants = catchAsync(
-    async (req: Request<{ id: string }, {}, AddParticipantsInput>, res: Response) => {
-      const userId = req.userId;
-      const { id } = req.params;
-      const participantsData = req.body;
+  addParticipants = catchAsync(async (req: Request<{ id: string }, {}, AddParticipantsInput>, res: Response) => {
+    const userId = req.userId;
+    const { id } = req.params;
+    const participantsData = req.body;
 
-      const participants = await ConversationService.addParticipants(
-        userId,
-        parseInt(id),
-        participantsData
-      );
+    const participants = await ConversationService.addParticipants(userId, parseInt(id), participantsData);
 
-      res.status(StatusCode.CREATED).json({
-        message: 'Participantes adicionados com sucesso.',
-        data: participants,
-      });
-    }
-  );
+    res.status(StatusCode.CREATED).json({
+      message: 'Participantes adicionados com sucesso.',
+      data: participants,
+    });
+  });
 
-  removeParticipant = catchAsync(
-    async (req: Request<RemoveParticipantInput>, res: Response) => {
-      const requestUserId = req.userId;
-      const { id, userId } = req.params;
+  removeParticipant = catchAsync(async (req: Request<RemoveParticipantInput>, res: Response) => {
+    const requestUserId = req.userId;
+    const { id, userId } = req.params;
 
-      await ConversationService.removeParticipant(
-        requestUserId,
-        id,
-        userId
-      );
+    await ConversationService.removeParticipant(requestUserId, id, userId);
 
-      res.status(StatusCode.OK).json({
-        message: 'Participante removido com sucesso.',
-      });
-    }
-  );
+    res.status(StatusCode.OK).json({
+      message: 'Participante removido com sucesso.',
+    });
+  });
 
   getParticipants = catchAsync(async (req: Request, res: Response) => {
     const userId = req.userId;
     const { id } = req.params;
 
-    const participants = await ConversationService.getParticipants(
-      userId,
-      parseInt(id)
-    );
+    const participants = await ConversationService.getParticipants(userId, parseInt(id));
 
     res.status(StatusCode.OK).json({
       message: 'Participantes listados com sucesso.',

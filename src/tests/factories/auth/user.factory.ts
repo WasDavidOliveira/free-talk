@@ -1,15 +1,12 @@
-import { faker } from '@faker-js/faker';
-import { CreateUserModel, UserModel } from '@/types/models/v1/auth.types';
-import bcrypt from 'bcrypt';
-import UserRepository from '@/repositories/v1/modules/auth/user.repository';
-import {
-  LoginInput,
-  RegisterInput,
-} from '@/validations/v1/modules/auth.validations';
-import jwt from 'jsonwebtoken';
 import appConfig from '@/configs/app.config';
+import UserRepository from '@/repositories/v1/modules/auth/user.repository';
 import { RoleFactory } from '@/tests/factories/role/role.factory';
 import { UserRoleFactory } from '@/tests/factories/user-role/user-role.factory';
+import { CreateUserModel, UserModel } from '@/types/models/v1/auth.types';
+import { LoginInput, RegisterInput } from '@/validations/v1/modules/auth.validations';
+import { faker } from '@faker-js/faker';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export class UserFactory {
   static makeUserData(overrides: Partial<CreateUserModel> = {}): RegisterInput {
@@ -21,18 +18,14 @@ export class UserFactory {
     };
   }
 
-  static makeLoginData(
-    email: string = faker.internet.email().toLowerCase()
-  ): LoginInput {
+  static makeLoginData(email: string = faker.internet.email().toLowerCase()): LoginInput {
     return {
       email,
       password: 'senha123',
     };
   }
 
-  static async createUser(
-    overrides: Partial<CreateUserModel> = {}
-  ): Promise<{ user: UserModel; password: string }> {
+  static async createUser(overrides: Partial<CreateUserModel> = {}): Promise<{ user: UserModel; password: string }> {
     const password = overrides.password || 'senha123';
     const passwordHash = await bcrypt.hash(password, 10);
 
@@ -51,7 +44,7 @@ export class UserFactory {
 
   static async createUserWithRole(
     roleId?: number,
-    overrides: Partial<CreateUserModel> = {}
+    overrides: Partial<CreateUserModel> = {},
   ): Promise<{ user: UserModel; password: string }> {
     const { user, password } = await this.createUser(overrides);
 
@@ -69,7 +62,7 @@ export class UserFactory {
   }
 
   static async createUserAndGetLoginData(
-    overrides: Partial<CreateUserModel> = {}
+    overrides: Partial<CreateUserModel> = {},
   ): Promise<{ user: UserModel; loginData: LoginInput }> {
     const { user, password } = await this.createUser(overrides);
 
@@ -91,7 +84,7 @@ export class UserFactory {
   }
 
   static async createUserAndGetToken(
-    overrides: Partial<CreateUserModel> = {}
+    overrides: Partial<CreateUserModel> = {},
   ): Promise<{ user: UserModel; token: string }> {
     const { user } = await this.createUser(overrides);
     const token = this.generateJwtToken(user.id);
@@ -104,7 +97,7 @@ export class UserFactory {
 
   static async createUserWithRoleAndGetToken(
     roleId?: number,
-    overrides: Partial<CreateUserModel> = {}
+    overrides: Partial<CreateUserModel> = {},
   ): Promise<{ user: UserModel; token: string }> {
     const { user } = await this.createUserWithRole(roleId, overrides);
     const token = this.generateJwtToken(user.id);

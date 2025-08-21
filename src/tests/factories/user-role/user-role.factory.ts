@@ -1,13 +1,10 @@
 import { db } from '@/db/db.connection';
 import { userRoles } from '@/db/schema/v1/user-role.schema';
 import { UserRole } from '@/types/infrastructure/middlewares.types';
-import { eq, and } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 export class UserRoleFactory {
-  static async attachRoleToUser(
-    userId: number,
-    roleId: number
-  ): Promise<UserRole> {
+  static async attachRoleToUser(userId: number, roleId: number): Promise<UserRole> {
     const [userRole] = await db
       .insert(userRoles)
       .values({
@@ -24,19 +21,11 @@ export class UserRoleFactory {
     };
   }
 
-  static async createUserWithRole(
-    userId: number,
-    roleId: number
-  ): Promise<UserRole> {
+  static async createUserWithRole(userId: number, roleId: number): Promise<UserRole> {
     return await this.attachRoleToUser(userId, roleId);
   }
 
-  static async detachRoleFromUser(
-    userId: number,
-    roleId: number
-  ): Promise<void> {
-    await db
-      .delete(userRoles)
-      .where(and(eq(userRoles.userId, userId), eq(userRoles.roleId, roleId)));
+  static async detachRoleFromUser(userId: number, roleId: number): Promise<void> {
+    await db.delete(userRoles).where(and(eq(userRoles.userId, userId), eq(userRoles.roleId, roleId)));
   }
 }

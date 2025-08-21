@@ -1,13 +1,9 @@
 import appConfig from '@/configs/app.config';
-import { NotFoundError } from '@/utils/core/app-error.utils';
 import UserRepository from '@/repositories/v1/modules/auth/user.repository';
-import { UnauthorizedError } from '@/utils/core/app-error.utils';
-import jwt from 'jsonwebtoken';
+import { NotFoundError, UnauthorizedError } from '@/utils/core/app-error.utils';
+import { LoginInput, RegisterInput } from '@/validations/v1/modules/auth.validations';
 import bcrypt from 'bcrypt';
-import {
-  LoginInput,
-  RegisterInput,
-} from '@/validations/v1/modules/auth.validations';
+import jwt from 'jsonwebtoken';
 
 export class AuthService {
   async login(data: LoginInput) {

@@ -1,12 +1,5 @@
-import {
-  pgTable,
-  serial,
-  integer,
-  varchar,
-  bigint,
-  timestamp,
-} from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
+import { bigint, integer, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { message } from './message.schema';
 
 export const messageAttachment = pgTable('message_attachments', {
@@ -20,12 +13,9 @@ export const messageAttachment = pgTable('message_attachments', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-export const messageAttachmentRelations = relations(
-  messageAttachment,
-  ({ one }) => ({
-    message: one(message, {
-      fields: [messageAttachment.messageId],
-      references: [message.id],
-    }),
-  })
-);
+export const messageAttachmentRelations = relations(messageAttachment, ({ one }) => ({
+  message: one(message, {
+    fields: [messageAttachment.messageId],
+    references: [message.id],
+  }),
+}));

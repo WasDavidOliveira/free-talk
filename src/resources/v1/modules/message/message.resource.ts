@@ -1,4 +1,4 @@
-import { MessageWithSender, MessageWithAttachments } from '@/types/models/v1/message.types';
+import { MessageWithAttachments, MessageWithSender } from '@/types/models/v1/message.types';
 
 export class MessageResource {
   static async toResponse(message: MessageWithSender | MessageWithAttachments) {
@@ -19,7 +19,7 @@ export class MessageResource {
   }
 
   static async toResponseArray(messages: (MessageWithSender | MessageWithAttachments)[]) {
-    return Promise.all(messages.map(message => this.toResponse(message)));
+    return Promise.all(messages.map((message) => this.toResponse(message)));
   }
 }
 

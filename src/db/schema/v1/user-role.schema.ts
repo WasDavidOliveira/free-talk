@@ -1,7 +1,7 @@
-import { pgTable, primaryKey, integer, timestamp } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
-import { user } from '@/db/schema/v1/user.schema';
 import { roles } from '@/db/schema/v1/role.schema';
+import { user } from '@/db/schema/v1/user.schema';
+import { relations } from 'drizzle-orm';
+import { integer, pgTable, primaryKey, timestamp } from 'drizzle-orm/pg-core';
 
 export const userRoles = pgTable(
   'user_roles',
@@ -19,7 +19,7 @@ export const userRoles = pgTable(
     return {
       pk: primaryKey({ columns: [table.userId, table.roleId] }),
     };
-  }
+  },
 );
 
 export const userRoleRelations = relations(userRoles, ({ one }) => ({

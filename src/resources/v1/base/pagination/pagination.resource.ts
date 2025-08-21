@@ -1,13 +1,7 @@
-import {
-  PaginationMeta,
-  PaginatedResponse,
-} from '@/types/models/v1/pagination.types';
+import { PaginatedResponse, PaginationMeta } from '@/types/models/v1/pagination.types';
 
 export class PaginationResource {
-  static toResponse<T>(
-    data: T[],
-    pagination: PaginationMeta
-  ): PaginatedResponse<T> {
+  static toResponse<T>(data: T[], pagination: PaginationMeta): PaginatedResponse<T> {
     return {
       data,
       pagination: {
@@ -35,10 +29,7 @@ export class PaginationResource {
     };
   }
 
-  static fromRepositoryResult<T>(result: {
-    data: T[];
-    pagination: PaginationMeta;
-  }): PaginatedResponse<T> {
+  static fromRepositoryResult<T>(result: { data: T[]; pagination: PaginationMeta }): PaginatedResponse<T> {
     return this.toResponse(result.data, result.pagination);
   }
 }

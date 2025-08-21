@@ -1,7 +1,7 @@
 import { db } from '@/db/db.connection';
 import { user } from '@/db/schema/v1/user.schema';
-import * as bcrypt from 'bcrypt';
 import { logger } from '@/utils/core/logger.utils';
+import * as bcrypt from 'bcrypt';
 
 export async function seedUsers() {
   try {
@@ -23,10 +23,7 @@ export async function seedUsers() {
     ];
 
     for (const userData of defaultUsers) {
-      await db
-        .insert(user)
-        .values(userData)
-        .onConflictDoNothing({ target: user.email });
+      await db.insert(user).values(userData).onConflictDoNothing({ target: user.email });
     }
 
     logger.info('Users seeded successfully');

@@ -1,18 +1,15 @@
 import ConversationRepository from '@/repositories/v1/modules/conversation/conversation.repository';
-import { PaginationInput } from '@/validations/v1/base/pagination.validations';
 import { BadRequestError, NotFoundError } from '@/utils/core/app-error.utils';
+import { PaginationInput } from '@/validations/v1/base/pagination.validations';
 import {
+  AddParticipantsInput,
   CreateConversationInput,
   UpdateConversationInput,
-  AddParticipantsInput,
 } from '@/validations/v1/modules/conversation.validations';
 
 export class ConversationService {
   async index(userId: number, pagination: PaginationInput) {
-    const conversations = await ConversationRepository.index(
-      userId,
-      pagination
-    );
+    const conversations = await ConversationRepository.index(userId, pagination);
 
     return conversations;
   }
@@ -39,11 +36,7 @@ export class ConversationService {
     return conversation;
   }
 
-  async update(
-    userId: number,
-    conversationId: number,
-    conversationData: UpdateConversationInput
-  ) {
+  async update(userId: number, conversationId: number, conversationData: UpdateConversationInput) {
     const conversation = await ConversationRepository.findByIdAndUserId({
       id: conversationId,
       userId,
@@ -53,11 +46,7 @@ export class ConversationService {
       throw new NotFoundError('Conversa não encontrada');
     }
 
-    const updatedConversation = await ConversationRepository.update(
-      userId,
-      conversationId,
-      conversationData
-    );
+    const updatedConversation = await ConversationRepository.update(userId, conversationId, conversationData);
 
     return updatedConversation;
   }
@@ -87,7 +76,10 @@ export class ConversationService {
       throw new NotFoundError('Conversa não encontrada');
     }
 
-    const existingParticipants = await ConversationRepository.getExistingParticipants(conversationId, participantsData.userIds);
+    const existingParticipants = await ConversationRepository.getExistingParticipants(
+      conversationId,
+      participantsData.userIds,
+    );
 
     if (existingParticipants.length > 0) {
       throw new BadRequestError('Alguns participantes já existem na conversa. IDs: ' + existingParticipants.join(', '));
@@ -108,10 +100,7 @@ export class ConversationService {
       throw new NotFoundError('Conversa não encontrada');
     }
 
-    const isParticipant = await ConversationRepository.isParticipant(
-      conversationId,
-      participantUserId
-    );
+    const isParticipant = await ConversationRepository.isParticipant(conversationId, participantUserId);
 
     if (!isParticipant) {
       throw new NotFoundError('Conversa não encontrada');

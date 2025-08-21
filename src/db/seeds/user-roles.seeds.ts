@@ -1,8 +1,8 @@
 import { db } from '@/db/db.connection';
 import { roles } from '@/db/schema/v1/role.schema';
 import { userRoles } from '@/db/schema/v1/user-role.schema';
-import { eq, and } from 'drizzle-orm';
 import { logger } from '@/utils/core/logger.utils';
+import { and, eq } from 'drizzle-orm';
 
 export async function seedUserRoles() {
   try {
@@ -27,18 +27,12 @@ export async function seedUserRoles() {
     }
 
     for (const userRecord of allUsers) {
-      const roleToAssign =
-        userRecord.email === 'admin@example.com' ? adminRole : userRole;
+      const roleToAssign = userRecord.email === 'admin@example.com' ? adminRole : userRole;
 
       const existing = await db
         .select()
         .from(userRoles)
-        .where(
-          and(
-            eq(userRoles.userId, userRecord.id),
-            eq(userRoles.roleId, roleToAssign.id)
-          )
-        )
+        .where(and(eq(userRoles.userId, userRecord.id), eq(userRoles.roleId, roleToAssign.id)))
         .limit(1);
 
       if (existing.length === 0) {
@@ -47,9 +41,7 @@ export async function seedUserRoles() {
           roleId: roleToAssign.id,
         });
 
-        logger.info(
-          `Assigned role "${roleToAssign.name}" to user "${userRecord.email}"`
-        );
+        logger.info(`Assigned role "${roleToAssign.name}" to user "${userRecord.email}"`);
       }
     }
 

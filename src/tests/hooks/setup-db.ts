@@ -1,5 +1,5 @@
-import { afterAll, afterEach, beforeEach } from 'vitest';
 import { db } from '@/db/db.connection';
+import { afterAll, afterEach, beforeEach } from 'vitest';
 
 const pool = (db as { _client?: { end: () => Promise<void> } })._client;
 

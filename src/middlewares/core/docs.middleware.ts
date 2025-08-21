@@ -1,9 +1,9 @@
-import { Application, Request, Response } from 'express';
-import { apiReference } from '@scalar/express-api-reference';
 import { scalarConfig } from '@/configs/docs.config';
-import path from 'path';
-import fs from 'fs';
 import { generateOpenAPIDocument } from '@/utils/documentation/openapi.utils';
+import { apiReference } from '@scalar/express-api-reference';
+import { Application, Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
 
 export const configureDocs = (app: Application) => {
   generateOpenAPIDocument();
@@ -28,6 +28,6 @@ export const configureDocs = (app: Application) => {
         targetKey: 'node',
         clientKey: 'fetch',
       },
-    })
+    }),
   );
 };

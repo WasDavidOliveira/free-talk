@@ -6,5 +6,4 @@ export const PermissionActions = {
   MANAGE: 'manage',
 } as const;
 
-export type PermissionAction =
-  (typeof PermissionActions)[keyof typeof PermissionActions];
+export type PermissionAction = (typeof PermissionActions)[keyof typeof PermissionActions];

@@ -1,14 +1,11 @@
-import { faker } from '@faker-js/faker';
+import { MessageType } from '@/enums/v1/modules/chat/message-types.enum';
 import { MessageRepository } from '@/repositories/v1/modules/message/message.repository';
-import {
-  CreateMessageModel,
-  MessageWithSender,
-} from '@/types/models/v1/message.types';
 import { UserFactory } from '@/tests/factories/auth/user.factory';
 import { ConversationFactory } from '@/tests/factories/conversation/conversation.factory';
 import { UserModel } from '@/types/models/v1/auth.types';
 import { ConversationModel } from '@/types/models/v1/conversation.types';
-import { MessageType } from '@/enums/v1/modules/chat/message-types.enum';
+import { CreateMessageModel, MessageWithSender } from '@/types/models/v1/message.types';
+import { faker } from '@faker-js/faker';
 
 export class MessageBuilder {
   private data: Partial<CreateMessageModel> = {};
@@ -109,33 +106,25 @@ export class MessageFactory {
     return new MessageBuilder();
   }
 
-  static makeMessageData(
-    overrides: Partial<CreateMessageModel> = {}
-  ): CreateMessageModel {
+  static makeMessageData(overrides: Partial<CreateMessageModel> = {}): CreateMessageModel {
     return new MessageBuilder().withOverrides(overrides).build();
   }
 
-  static async createMessage(
-    overrides: Partial<CreateMessageModel> = {}
-  ): Promise<MessageWithSender> {
+  static async createMessage(overrides: Partial<CreateMessageModel> = {}): Promise<MessageWithSender> {
     return new MessageBuilder().withOverrides(overrides).create();
   }
 
-  static async createMessageWithUserAndConversation(
-    overrides: Partial<CreateMessageModel> = {}
-  ): Promise<{
+  static async createMessageWithUserAndConversation(overrides: Partial<CreateMessageModel> = {}): Promise<{
     message: MessageWithSender;
     user: UserModel;
     conversation: ConversationModel;
   }> {
-    return new MessageBuilder()
-      .withOverrides(overrides)
-      .createWithUserAndConversation();
+    return new MessageBuilder().withOverrides(overrides).createWithUserAndConversation();
   }
 
   static async createManyMessages(
     count: number,
-    overrides: Partial<CreateMessageModel> = {}
+    overrides: Partial<CreateMessageModel> = {},
   ): Promise<MessageWithSender[]> {
     return new MessageBuilder().withOverrides(overrides).createMany(count);
   }
@@ -143,7 +132,7 @@ export class MessageFactory {
   static async createMessagesForConversation(
     conversationId: number,
     senderId: number,
-    count: number = 5
+    count: number = 5,
   ): Promise<MessageWithSender[]> {
     const messages: MessageWithSender[] = [];
 
@@ -158,10 +147,10 @@ export class MessageFactory {
 
     return messages;
   }
-  
+
   static async createConversationWithMessages(
     userId: number,
-    messageCount: number = 5
+    messageCount: number = 5,
   ): Promise<{
     conversation: ConversationModel;
     messages: MessageWithSender[];
@@ -170,11 +159,7 @@ export class MessageFactory {
       createdBy: userId,
     });
 
-    const messages = await MessageFactory.createMessagesForConversation(
-      conversation.id,
-      userId,
-      messageCount
-    );
+    const messages = await MessageFactory.createMessagesForConversation(conversation.id, userId, messageCount);
 
     return {
       conversation,
@@ -184,7 +169,7 @@ export class MessageFactory {
 
   static async createConversationWithMultipleUsers(
     userCount: number = 3,
-    messagesPerUser: number = 2
+    messagesPerUser: number = 2,
   ): Promise<{
     conversation: ConversationModel;
     users: UserModel[];
@@ -200,17 +185,14 @@ export class MessageFactory {
       createdBy: users[0].id,
     });
 
-    await ConversationFactory.addParticipantsToConversation(
-      conversation.id,
-      users.slice(1)
-    );
+    await ConversationFactory.addParticipantsToConversation(conversation.id, users.slice(1));
 
     const messages: MessageWithSender[] = [];
     for (const user of users) {
       const userMessages = await MessageFactory.createMessagesForConversation(
         conversation.id,
         user.id,
-        messagesPerUser
+        messagesPerUser,
       );
       messages.push(...userMessages);
     }

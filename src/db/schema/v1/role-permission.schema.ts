@@ -1,7 +1,7 @@
-import { pgTable, primaryKey, integer, timestamp } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
-import { roles } from '@/db/schema/v1/role.schema';
 import { permissions } from '@/db/schema/v1/permission.schema';
+import { roles } from '@/db/schema/v1/role.schema';
+import { relations } from 'drizzle-orm';
+import { integer, pgTable, primaryKey, timestamp } from 'drizzle-orm/pg-core';
 
 export const rolePermissions = pgTable(
   'role_permissions',
@@ -19,19 +19,16 @@ export const rolePermissions = pgTable(
     return {
       pk: primaryKey({ columns: [table.roleId, table.permissionId] }),
     };
-  }
+  },
 );
 
-export const rolePermissionRelations = relations(
-  rolePermissions,
-  ({ one }) => ({
-    role: one(roles, {
-      fields: [rolePermissions.roleId],
-      references: [roles.id],
-    }),
-    permission: one(permissions, {
-      fields: [rolePermissions.permissionId],
-      references: [permissions.id],
-    }),
-  })
-);
+export const rolePermissionRelations = relations(rolePermissions, ({ one }) => ({
+  role: one(roles, {
+    fields: [rolePermissions.roleId],
+    references: [roles.id],
+  }),
+  permission: one(permissions, {
+    fields: [rolePermissions.permissionId],
+    references: [permissions.id],
+  }),
+}));

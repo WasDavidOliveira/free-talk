@@ -1,15 +1,11 @@
-import { ConversationModel } from '@/types/models/v1/conversation.types';
-import { UserResource } from '@/resources/v1/modules/user/user.resources';
-import { resolveRelation } from '@/utils/db/relation-resolver.utils';
 import userRepository from '@/repositories/v1/modules/auth/user.repository';
+import { UserResource } from '@/resources/v1/modules/user/user.resources';
+import { ConversationModel } from '@/types/models/v1/conversation.types';
+import { resolveRelation } from '@/utils/db/relation-resolver.utils';
 
 export default class ConversationResource {
   static async toResponse(item: ConversationModel) {
-    const createdBy = await resolveRelation(
-      item.createdBy,
-      userRepository,
-      UserResource.toResponseBasic
-    );
+    const createdBy = await resolveRelation(item.createdBy, userRepository, UserResource.toResponseBasic);
 
     return {
       id: item.id,

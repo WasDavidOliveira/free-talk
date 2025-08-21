@@ -7,7 +7,6 @@ export const globalRateLimiter = rateLimit({
   legacyHeaders: false,
   message: {
     status: 'error',
-    message:
-      'Muitas requisições deste IP, por favor tente novamente após 1 minuto',
+    message: 'Muitas requisições deste IP, por favor tente novamente após 1 minuto',
   },
 });

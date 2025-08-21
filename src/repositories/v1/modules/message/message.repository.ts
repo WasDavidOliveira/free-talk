@@ -1,13 +1,9 @@
+import { PAGINATION_DEFAULT_VALUES } from '@/constants/pagination.constants';
 import { db } from '@/db/db.connection';
 import { message } from '@/db/schema/v1/message.schema';
-import { and, desc, eq, sql, asc, inArray } from 'drizzle-orm';
+import { CreateMessageModel, MessageWithSender, UpdateMessageModel } from '@/types/models/v1/message.types';
 import { PaginationInput } from '@/validations/v1/base/pagination.validations';
-import { PAGINATION_DEFAULT_VALUES } from '@/constants/pagination.constants';
-import { 
-  CreateMessageModel,
-  MessageWithSender,
-  UpdateMessageModel 
-} from '@/types/models/v1/message.types';
+import { and, asc, desc, eq, inArray, sql } from 'drizzle-orm';
 
 export class MessageRepository {
   async getMessagesByConversation(conversationId: number, pagination: PaginationInput) {
@@ -79,10 +75,7 @@ export class MessageRepository {
 
   async findByIdAndConversation(messageId: number, conversationId: number): Promise<MessageWithSender | null> {
     const messageResult = await db.query.message.findFirst({
-      where: and(
-        eq(message.id, messageId),
-        eq(message.conversationId, conversationId)
-      ),
+      where: and(eq(message.id, messageId), eq(message.conversationId, conversationId)),
       with: {
         sender: {
           columns: {
@@ -99,20 +92,13 @@ export class MessageRepository {
   }
 
   async create(messageData: CreateMessageModel) {
-    const [newMessage] = await db
-      .insert(message)
-      .values(messageData)
-      .returning();
+    const [newMessage] = await db.insert(message).values(messageData).returning();
 
     return this.findById(newMessage.id);
   }
 
   async update(messageId: number, messageData: UpdateMessageModel) {
-    const [updatedMessage] = await db
-      .update(message)
-      .set(messageData)
-      .where(eq(message.id, messageId))
-      .returning();
+    const [updatedMessage] = await db.update(message).set(messageData).where(eq(message.id, messageId)).returning();
 
     return this.findById(updatedMessage.id);
   }
@@ -122,10 +108,7 @@ export class MessageRepository {
   }
 
   async markAsRead(messageIds: number[]) {
-    await db
-      .update(message)
-      .set({ readAt: new Date() })
-      .where(inArray(message.id, messageIds));
+    await db.update(message).set({ readAt: new Date() }).where(inArray(message.id, messageIds));
   }
 
   async getUnreadMessagesCount(conversationId: number, userId: number): Promise<number> {
@@ -133,11 +116,7 @@ export class MessageRepository {
       .select({ count: sql<number>`count(*)` })
       .from(message)
       .where(
-        and(
-          eq(message.conversationId, conversationId),
-          eq(message.senderId, userId),
-          sql`${message.readAt} IS NULL`
-        )
+        and(eq(message.conversationId, conversationId), eq(message.senderId, userId), sql`${message.readAt} IS NULL`),
       );
 
     return parseInt(result[0]?.count?.toString() || '0');

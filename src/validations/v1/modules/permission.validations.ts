@@ -1,6 +1,6 @@
+import { PermissionActions } from '@/constants/permission.constants';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from 'zod-openapi';
-import { PermissionActions } from '@/constants/permission.constants';
 
 extendZodWithOpenApi(z);
 
@@ -20,9 +20,5 @@ export const updatePermissionSchema = z.object({
   }),
 });
 
-export type CreatePermissionInput = z.infer<
-  typeof createPermissionSchema
->['body'];
-export type UpdatePermissionInput = z.infer<
-  typeof updatePermissionSchema
->['body'];
+export type CreatePermissionInput = z.infer<typeof createPermissionSchema>['body'];
+export type UpdatePermissionInput = z.infer<typeof updatePermissionSchema>['body'];

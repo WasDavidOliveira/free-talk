@@ -1,8 +1,8 @@
+import { PermissionActions } from '@/constants/permission.constants';
 import { db } from '@/db/db.connection';
 import { permissions } from '@/db/schema/v1/permission.schema';
 import { logger } from '@/utils/core/logger.utils';
-import { PermissionActions } from '@/constants/permission.constants';
-import { eq, and } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 export async function seedPermissions() {
   try {
@@ -69,8 +69,8 @@ export async function seedPermissions() {
           and(
             eq(permissions.name, permission.name),
             eq(permissions.action, permission.action),
-            eq(permissions.description, permission.description)
-          )
+            eq(permissions.description, permission.description),
+          ),
         )
         .limit(1);
 

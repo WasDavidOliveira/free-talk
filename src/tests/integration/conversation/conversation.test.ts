@@ -1,12 +1,12 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import request from 'supertest';
+import { StatusCode } from '@/constants/status-code.constants';
 import app from '@/server';
 import { UserFactory } from '@/tests/factories/auth/user.factory';
-import { Server } from 'http';
-import setupTestDB from '@/tests/hooks/setup-db';
 import { ConversationFactory } from '@/tests/factories/conversation/conversation.factory';
+import setupTestDB from '@/tests/hooks/setup-db';
 import { UserModel } from '@/types/models/v1/auth.types';
-import { StatusCode } from '@/constants/status-code.constants';
+import { Server } from 'http';
+import request from 'supertest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 let server: Server;
 let token: string;
@@ -36,9 +36,7 @@ describe('Conversas', () => {
         createdBy: user.id,
       });
 
-      const response = await request(server)
-        .get(`${apiUrl}`)
-        .set('Authorization', `Bearer ${token}`);
+      const response = await request(server).get(`${apiUrl}`).set('Authorization', `Bearer ${token}`);
 
       expect(response.status).toBe(StatusCode.OK);
       expect(response.body.data).toHaveLength(10);
@@ -60,13 +58,10 @@ describe('Conversas', () => {
         createdBy: user.id,
       });
 
-      const response = await request(server)
-        .get(`${apiUrl}`)
-        .set('Authorization', `Bearer ${token}`)
-        .query({
-          page,
-          per_page: perPage,
-        });
+      const response = await request(server).get(`${apiUrl}`).set('Authorization', `Bearer ${token}`).query({
+        page,
+        per_page: perPage,
+      });
 
       expect(response.status).toBe(StatusCode.OK);
 
@@ -91,9 +86,7 @@ describe('Conversas', () => {
       expect(response.body.pagination.page).toBe(page);
       expect(response.body.pagination.per_page).toBe(perPage);
       expect(response.body.pagination.total_pages).toBe(totalPages);
-      expect(response.body.pagination.has_next_page).toBe(
-        totalConversations > perPage
-      );
+      expect(response.body.pagination.has_next_page).toBe(totalConversations > perPage);
       expect(response.body.pagination.has_previous_page).toBe(false);
     });
   });
@@ -150,10 +143,7 @@ describe('Conversas', () => {
     });
 
     it('(create) deve retornar erro 400 se o título não for informado', async () => {
-      const response = await request(server)
-        .post(`${apiUrl}`)
-        .set('Authorization', `Bearer ${token}`)
-        .send({});
+      const response = await request(server).post(`${apiUrl}`).set('Authorization', `Bearer ${token}`).send({});
 
       expect(response.status).toBe(StatusCode.BAD_REQUEST);
       expect(response.body.errors[0].campo).toBe('title');
@@ -235,7 +225,7 @@ describe('Conversas', () => {
         .post(`${apiUrl}/${conversation.id}/participants`)
         .set('Authorization', `Bearer ${token}`)
         .send({ userIds: [user2.user.id] });
-      
+
       expect(response.status).toBe(StatusCode.CREATED);
       expect(response.body.message).toBe('Participantes adicionados com sucesso.');
       expect(response.body.data).toBeDefined();
@@ -251,10 +241,7 @@ describe('Conversas', () => {
       const user2 = await UserFactory.createUser();
       const user3 = await UserFactory.createUser();
 
-      await ConversationFactory.addParticipantsToConversation(conversation.id, [
-        user2.user,
-        user3.user,
-      ]);
+      await ConversationFactory.addParticipantsToConversation(conversation.id, [user2.user, user3.user]);
 
       const response = await request(app)
         .post(`/api/v1/conversations/${conversation.id}/participants`)
@@ -272,10 +259,9 @@ describe('Conversas', () => {
 
   describe('(getParticipants) GET /api/v1/conversations/:id/participants', () => {
     it('(getParticipants) deve listar participantes da conversa', async () => {
-      const { conversation, participants } = await ConversationFactory.createConversationWithParticipants(
-        3,
-        { createdBy: user.id }
-      );
+      const { conversation, participants } = await ConversationFactory.createConversationWithParticipants(3, {
+        createdBy: user.id,
+      });
 
       const response = await request(app)
         .get(`/api/v1/conversations/${conversation.id}/participants`)
@@ -285,9 +271,9 @@ describe('Conversas', () => {
       expect(response.body.message).toBe('Participantes listados com sucesso.');
       expect(response.body.data).toBeDefined();
       expect(response.body.data.length).toBe(3);
-      
+
       const participantIds = response.body.data.map((p: { userId: number }) => p.userId);
-      participants.forEach(participant => {
+      participants.forEach((participant) => {
         expect(participantIds).toContain(participant.id);
       });
     });
@@ -295,10 +281,9 @@ describe('Conversas', () => {
 
   describe('(removeParticipant) DELETE /api/v1/conversations/:id/participants/:userId', () => {
     it('(removeParticipant) deve remover participante da conversa', async () => {
-      const { conversation, participants } = await ConversationFactory.createConversationWithParticipants(
-        2,
-        { createdBy: user.id }
-      );
+      const { conversation, participants } = await ConversationFactory.createConversationWithParticipants(2, {
+        createdBy: user.id,
+      });
 
       const participantToRemove = participants[0];
 

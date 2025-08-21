@@ -38,10 +38,7 @@ export class PermissionService {
       throw new NotFoundError('Permissão não encontrada');
     }
 
-    const updatedPermission = await PermissionRepository.update(
-      id,
-      permissionData
-    );
+    const updatedPermission = await PermissionRepository.update(id, permissionData);
 
     return updatedPermission;
   }

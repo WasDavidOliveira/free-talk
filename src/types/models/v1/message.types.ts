@@ -1,5 +1,5 @@
-import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import { message } from '@/db/schema/v1/message.schema';
+import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 
 export type MessageModel = InferSelectModel<typeof message>;
 export type CreateMessageModel = InferInsertModel<typeof message>;

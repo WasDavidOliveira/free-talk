@@ -1,14 +1,8 @@
-import {
-  pgTable,
-  serial,
-  timestamp,
-  integer,
-  varchar,
-} from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
 import { conversationParticipant } from '@/db/schema/v1/conversation-participant.schema';
 import { message } from '@/db/schema/v1/message.schema';
 import { user } from '@/db/schema/v1/user.schema';
+import { relations } from 'drizzle-orm';
+import { integer, pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 export const conversation = pgTable('conversations', {
   id: serial('id').primaryKey(),
@@ -21,14 +15,11 @@ export const conversation = pgTable('conversations', {
   deletedAt: timestamp('deleted_at'),
 });
 
-export const conversationRelations = relations(
-  conversation,
-  ({ many, one }) => ({
-    participants: many(conversationParticipant),
-    messages: many(message),
-    createdBy: one(user, {
-      fields: [conversation.createdBy],
-      references: [user.id],
-    }),
-  })
-);
+export const conversationRelations = relations(conversation, ({ many, one }) => ({
+  participants: many(conversationParticipant),
+  messages: many(message),
+  createdBy: one(user, {
+    fields: [conversation.createdBy],
+    references: [user.id],
+  }),
+}));

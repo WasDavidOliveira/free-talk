@@ -5,13 +5,10 @@ extendZodWithOpenApi(z);
 export const createConversationSchema = z.object({
   body: z
     .object({
-      title: z
-        .string({ required_error: 'Título é obrigatório' })
-        .min(1, 'Título é obrigatório')
-        .openapi({
-          description: 'Título da conversa',
-          example: 'Conversa de teste',
-        }),
+      title: z.string({ required_error: 'Título é obrigatório' }).min(1, 'Título é obrigatório').openapi({
+        description: 'Título da conversa',
+        example: 'Conversa de teste',
+      }),
     })
     .openapi({
       ref: 'CreateConversationInput',
@@ -22,13 +19,10 @@ export const createConversationSchema = z.object({
 export const updateConversationSchema = z.object({
   body: z
     .object({
-      title: z
-        .string({ required_error: 'Título é obrigatório' })
-        .min(1, 'Título é obrigatório')
-        .openapi({
-          description: 'Título da conversa',
-          example: 'Conversa de teste',
-        }),
+      title: z.string({ required_error: 'Título é obrigatório' }).min(1, 'Título é obrigatório').openapi({
+        description: 'Título da conversa',
+        example: 'Conversa de teste',
+      }),
     })
     .openapi({
       ref: 'UpdateConversationInput',
@@ -75,22 +69,12 @@ export const removeParticipantSchema = z.object({
   }),
 });
 
-export type CreateConversationInput = z.infer<
-  typeof createConversationSchema
->['body'];
+export type CreateConversationInput = z.infer<typeof createConversationSchema>['body'];
 
-export type UpdateConversationInput = z.infer<
-  typeof updateConversationSchema
->['body'];
+export type UpdateConversationInput = z.infer<typeof updateConversationSchema>['body'];
 
-export type ParametroConversationInput = z.infer<
-  typeof parametroConversationSchema
->['params'];
+export type ParametroConversationInput = z.infer<typeof parametroConversationSchema>['params'];
 
-export type AddParticipantsInput = z.infer<
-  typeof addParticipantsSchema
->['body'];
+export type AddParticipantsInput = z.infer<typeof addParticipantsSchema>['body'];
 
-export type RemoveParticipantInput = z.infer<
-  typeof removeParticipantSchema
->['params'];
+export type RemoveParticipantInput = z.infer<typeof removeParticipantSchema>['params'];

@@ -1,10 +1,10 @@
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import request from 'supertest';
-import app from '@/server';
 import { StatusCode } from '@/constants/status-code.constants';
+import app from '@/server';
 import { UserFactory } from '@/tests/factories/auth/user.factory';
-import { Server } from 'http';
 import setupTestDB from '@/tests/hooks/setup-db';
+import { Server } from 'http';
+import request from 'supertest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 let server: Server;
 
@@ -24,9 +24,7 @@ describe('Autenticação', () => {
   it('deve cadastrar um novo usuário com sucesso', async () => {
     const userData = UserFactory.makeUserData();
 
-    const response = await request(server)
-      .post(`${apiUrl}/register`)
-      .send(userData);
+    const response = await request(server).post(`${apiUrl}/register`).send(userData);
 
     expect(response.status).toBe(StatusCode.OK);
     expect(response.body.message).toBe('Usuário criado com sucesso.');
@@ -38,9 +36,7 @@ describe('Autenticação', () => {
   it('deve autenticar um usuário e retornar um token', async () => {
     const { loginData } = await UserFactory.createUserAndGetLoginData();
 
-    const response = await request(server)
-      .post(`${apiUrl}/login`)
-      .send(loginData);
+    const response = await request(server).post(`${apiUrl}/login`).send(loginData);
 
     expect(response.status).toBe(StatusCode.OK);
     expect(response.body.message).toBe('Login realizado com sucesso.');

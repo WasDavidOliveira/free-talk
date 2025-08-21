@@ -1,40 +1,33 @@
-import { Request, Response } from 'express';
-import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
-import {
-  LoginInput,
-  RegisterInput,
-} from '@/validations/v1/modules/auth.validations';
-import AuthService from '@/services/v1/modules/auth/auth.service';
-import { UserResource } from '@/resources/v1/modules/user/user.resources';
-import { StatusCode } from '@/constants/status-code.constants';
 import appConfig from '@/configs/app.config';
+import { StatusCode } from '@/constants/status-code.constants';
+import { UserResource } from '@/resources/v1/modules/user/user.resources';
+import AuthService from '@/services/v1/modules/auth/auth.service';
+import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
+import { LoginInput, RegisterInput } from '@/validations/v1/modules/auth.validations';
+import { Request, Response } from 'express';
 
 export class AuthController {
-  login = catchAsync(
-    async (req: Request<{}, {}, LoginInput>, res: Response) => {
-      const result = await AuthService.login(req.body);
+  login = catchAsync(async (req: Request<{}, {}, LoginInput>, res: Response) => {
+    const result = await AuthService.login(req.body);
 
-      res.status(StatusCode.OK).json({
-        message: 'Login realizado com sucesso.',
-        token: {
-          accessToken: result.token,
-          expiresIn: appConfig.jwtExpiration,
-          tokenType: 'Bearer',
-        },
-      });
-    }
-  );
+    res.status(StatusCode.OK).json({
+      message: 'Login realizado com sucesso.',
+      token: {
+        accessToken: result.token,
+        expiresIn: appConfig.jwtExpiration,
+        tokenType: 'Bearer',
+      },
+    });
+  });
 
-  register = catchAsync(
-    async (req: Request<{}, {}, RegisterInput>, res: Response) => {
-      const user = await AuthService.register(req.body);
+  register = catchAsync(async (req: Request<{}, {}, RegisterInput>, res: Response) => {
+    const user = await AuthService.register(req.body);
 
-      res.status(StatusCode.OK).json({
-        message: 'Usuário criado com sucesso.',
-        user: UserResource.toResponse(user),
-      });
-    }
-  );
+    res.status(StatusCode.OK).json({
+      message: 'Usuário criado com sucesso.',
+      user: UserResource.toResponse(user),
+    });
+  });
 
   me = catchAsync(async (req: Request, res: Response) => {
     const user = await AuthService.me(req.userId);

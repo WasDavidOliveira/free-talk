@@ -1,6 +1,6 @@
+import { MessageType } from '@/enums/v1/modules/chat/message-types.enum';
 import { z } from 'zod';
 import { extendZodWithOpenApi } from 'zod-openapi';
-import { MessageType } from '@/enums/v1/modules/chat/message-types.enum';
 
 extendZodWithOpenApi(z);
 

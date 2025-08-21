@@ -1,11 +1,8 @@
-import { faker } from '@faker-js/faker';
 import ConversationRepository from '@/repositories/v1/modules/conversation/conversation.repository';
-import {
-  ConversationModel,
-  CreateConversationModel,
-} from '@/types/models/v1/conversation.types';
 import { UserFactory } from '@/tests/factories/auth/user.factory';
 import { UserModel } from '@/types/models/v1/auth.types';
+import { ConversationModel, CreateConversationModel } from '@/types/models/v1/conversation.types';
+import { faker } from '@faker-js/faker';
 
 export class ConversationBuilder {
   private data: Partial<CreateConversationModel> = {};
@@ -30,9 +27,7 @@ export class ConversationBuilder {
     return this;
   }
 
-  withOverrides(
-    overrides: Partial<CreateConversationModel>
-  ): ConversationBuilder {
+  withOverrides(overrides: Partial<CreateConversationModel>): ConversationBuilder {
     this.data = { ...this.data, ...overrides };
     return this;
   }
@@ -48,9 +43,7 @@ export class ConversationBuilder {
     const conversationData = this.build();
     const conversation = await ConversationRepository.create(conversationData);
 
-    const conversationWithRelations = await ConversationRepository.findById(
-      conversation.id
-    );
+    const conversationWithRelations = await ConversationRepository.findById(conversation.id);
 
     if (!conversationWithRelations) {
       throw new Error('Conversa não encontrada após criação');
@@ -83,44 +76,40 @@ export class ConversationFactory {
     return new ConversationBuilder();
   }
 
-  static makeConversationData(
-    overrides: Partial<CreateConversationModel> = {}
-  ): CreateConversationModel {
+  static makeConversationData(overrides: Partial<CreateConversationModel> = {}): CreateConversationModel {
     return new ConversationBuilder().withOverrides(overrides).build();
   }
 
-  static async createConversation(
-    overrides: Partial<CreateConversationModel> = {}
-  ): Promise<ConversationModel> {
+  static async createConversation(overrides: Partial<CreateConversationModel> = {}): Promise<ConversationModel> {
     return new ConversationBuilder().withOverrides(overrides).create();
   }
 
   static async createConversationWithUser(
-    overrides: Partial<CreateConversationModel> = {}
+    overrides: Partial<CreateConversationModel> = {},
   ): Promise<ConversationModel> {
     return new ConversationBuilder().withOverrides(overrides).createWithUser();
   }
 
   static async createManyConversations(
     count: number,
-    overrides: Partial<CreateConversationModel> = {}
+    overrides: Partial<CreateConversationModel> = {},
   ): Promise<ConversationModel[]> {
     return new ConversationBuilder().withOverrides(overrides).createMany(count);
   }
 
   static async createConversationWithParticipants(
     participantsCount: number = 2,
-    conversationOverrides: Partial<CreateConversationModel> = {}
+    conversationOverrides: Partial<CreateConversationModel> = {},
   ): Promise<{ conversation: ConversationModel; participants: UserModel[] }> {
     const conversation = await this.createConversation(conversationOverrides);
-    
+
     const participants: UserModel[] = [];
     for (let i = 0; i < participantsCount; i++) {
       const { user } = await UserFactory.createUser();
       participants.push(user);
     }
 
-    const userIds = participants.map(p => p.id);
+    const userIds = participants.map((p) => p.id);
     await ConversationRepository.addParticipants(conversation.id, userIds);
 
     return {
@@ -129,11 +118,8 @@ export class ConversationFactory {
     };
   }
 
-  static async addParticipantsToConversation(
-    conversationId: number,
-    users: UserModel[]
-  ): Promise<void> {
-    const userIds = users.map(user => user.id);
+  static async addParticipantsToConversation(conversationId: number, users: UserModel[]): Promise<void> {
+    const userIds = users.map((user) => user.id);
     await ConversationRepository.addParticipants(conversationId, userIds);
   }
 }

@@ -1,5 +1,5 @@
-import { InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import { conversationParticipant } from '@/db/schema/v1/conversation-participant.schema';
+import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 
 export type ConversationParticipantModel = InferSelectModel<typeof conversationParticipant>;
 export type CreateConversationParticipantModel = InferInsertModel<typeof conversationParticipant>;

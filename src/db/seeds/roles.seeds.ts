@@ -22,10 +22,7 @@ export async function seedRoles() {
     logger.info('Seeding roles...');
 
     for (const role of defaultRoles) {
-      await db
-        .insert(roles)
-        .values(role)
-        .onConflictDoNothing({ target: roles.name });
+      await db.insert(roles).values(role).onConflictDoNothing({ target: roles.name });
     }
 
     logger.info('Roles seeded successfully');

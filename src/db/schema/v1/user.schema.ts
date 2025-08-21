@@ -1,8 +1,8 @@
-import { pgTable, serial, varchar, timestamp } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
-import { userRoles } from '@/db/schema/v1/user-role.schema';
 import { conversationParticipant } from '@/db/schema/v1/conversation-participant.schema';
 import { message } from '@/db/schema/v1/message.schema';
+import { userRoles } from '@/db/schema/v1/user-role.schema';
+import { relations } from 'drizzle-orm';
+import { pgTable, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 export const user = pgTable('users', {
   id: serial('id').primaryKey(),

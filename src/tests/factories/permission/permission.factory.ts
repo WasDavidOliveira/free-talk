@@ -1,12 +1,10 @@
-import { faker } from '@faker-js/faker';
-import { PermissionModel } from '@/types/models/v1/permission.types';
 import PermissionRepository from '@/repositories/v1/modules/permission/permission.repository';
+import { PermissionModel } from '@/types/models/v1/permission.types';
 import { CreatePermissionInput } from '@/validations/v1/modules/permission.validations';
+import { faker } from '@faker-js/faker';
 
 export class PermissionFactory {
-  static makePermissionData(
-    overrides: Partial<CreatePermissionInput> = {}
-  ): CreatePermissionInput {
+  static makePermissionData(overrides: Partial<CreatePermissionInput> = {}): CreatePermissionInput {
     return {
       name: `${faker.hacker.verb()}_${Date.now()}`,
       description: faker.lorem.sentence(),
@@ -15,9 +13,7 @@ export class PermissionFactory {
     };
   }
 
-  static async createPermission(
-    overrides: Partial<CreatePermissionInput> = {}
-  ): Promise<PermissionModel> {
+  static async createPermission(overrides: Partial<CreatePermissionInput> = {}): Promise<PermissionModel> {
     const permissionData = this.makePermissionData(overrides);
 
     const permission = await PermissionRepository.create(permissionData);
@@ -27,7 +23,7 @@ export class PermissionFactory {
 
   static async createPermissions(
     count: number = 3,
-    overrides: Partial<CreatePermissionInput> = {}
+    overrides: Partial<CreatePermissionInput> = {},
   ): Promise<PermissionModel[]> {
     const permissions = [];
 

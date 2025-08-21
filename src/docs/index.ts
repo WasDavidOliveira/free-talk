@@ -1,6 +1,6 @@
+import { OpenAPISpec } from '@/types/core/openapi.types';
 import fs from 'fs';
 import path from 'path';
-import { OpenAPISpec } from '@/types/core/openapi.types';
 
 export const updateOpenAPISpec = (newSpec: OpenAPISpec) => {
   const openapiPath = path.resolve(process.cwd(), 'src/docs/openapi.json');

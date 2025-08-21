@@ -1,14 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
 import appConfig from '@/configs/app.config';
-import { UnauthorizedError } from '@/utils/core/app-error.utils';
 import { JwtPayload } from '@/types/core/jwt.types';
+import { UnauthorizedError } from '@/utils/core/app-error.utils';
+import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 
-export const authMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {

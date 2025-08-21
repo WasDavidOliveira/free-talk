@@ -1,5 +1,5 @@
-import RolePermissionRepository from '@/repositories/v1/modules/role-permission/role-permission.repository';
 import PermissionRepository from '@/repositories/v1/modules/permission/permission.repository';
+import RolePermissionRepository from '@/repositories/v1/modules/role-permission/role-permission.repository';
 import { NotFoundError } from '@/utils/core/app-error.utils';
 
 export class RolePermissionService {
@@ -10,10 +10,7 @@ export class RolePermissionService {
       throw new NotFoundError('Permissão não encontrada');
     }
 
-    const rolePermission = await RolePermissionRepository.attach(
-      roleId,
-      permissionId
-    );
+    const rolePermission = await RolePermissionRepository.attach(roleId, permissionId);
 
     return rolePermission;
   }
