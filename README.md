@@ -72,7 +72,7 @@ src/
 
 ```bash
 # Clone o repositório
-git clone <repository-url>
+git clone https://github.com/WasDavidOliveira/free-talk.git
 cd free-talk
 
 # Instale as dependências
@@ -367,9 +367,9 @@ Contribuições são muito bem-vindas! Para contribuir:
 ## 📞 Suporte
 
 Para dúvidas ou problemas:
-- 🐛 Abra uma [Issue](../../issues)
-- 💬 Entre em contato via [Discussions](../../discussions)
-- 📧 Email: [contato@exemplo.com](mailto:contato@exemplo.com)
+- 🐛 Abra uma [Issue](https://github.com/WasDavidOliveira/free-talk/issues)
+- 💬 Entre em contato via [Discussions](https://github.com/WasDavidOliveira/free-talk/discussions)
+- 📧 Email: [wasdavidoliveira@gmail.com](mailto:david-oliveira.code@proton.me)
 
 ---
 
