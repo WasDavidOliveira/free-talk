@@ -369,7 +369,7 @@ Contribuições são muito bem-vindas! Para contribuir:
 Para dúvidas ou problemas:
 - 🐛 Abra uma [Issue](https://github.com/WasDavidOliveira/free-talk/issues)
 - 💬 Entre em contato via [Discussions](https://github.com/WasDavidOliveira/free-talk/discussions)
-- 📧 Email: [wasdavidoliveira@gmail.com](mailto:david-oliveira.code@proton.me)
+- 📧 Email: [david-oliveira.code@proton.me](mailto:david-oliveira.code@proton.me)
 
 ---
 
