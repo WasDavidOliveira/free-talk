@@ -437,6 +437,7 @@ describe('Mensagens', () => {
       expect(response.body.data.length).toBe(6);
       
       const senderIds = response.body.data.map((msg: any) => msg.sender.id);
+      
       const uniqueSenderIds = [...new Set(senderIds)];
       expect(uniqueSenderIds.length).toBe(3);
     });

@@ -108,6 +108,7 @@ export class MessageService {
     }
 
     await MessageRepository.delete(messageId);
+    
     return true;
   }
 
