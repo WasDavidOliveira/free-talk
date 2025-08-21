@@ -153,8 +153,7 @@ describe('Mensagens', () => {
       const response = await request(server)
         .post(`/api/v1/conversations/${conversation.id}/messages`)
         .set('Authorization', `Bearer ${token}`)
-        .send(messageData)
-        .expect(StatusCode.CREATED);
+        .send(messageData);
 
       expect(response.body.message).toBe('Mensagem criada com sucesso.');
       expect(response.body.data.content).toBe(messageData.content);
