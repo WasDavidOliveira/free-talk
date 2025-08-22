@@ -122,4 +122,110 @@ describe('Autenticação', () => {
     expect(response.status).toBe(StatusCode.UNAUTHORIZED);
     expect(response.body.message).toBe('Token não fornecido');
   });
+
+  it('deve atualizar o nome do usuário com sucesso', async () => {
+    const { user, loginData } = await UserFactory.createUserAndGetLoginData();
+    const loginResponse = await request(server).post(`${apiUrl}/login`).send(loginData);
+    const token = loginResponse.body.token.accessToken;
+
+    const newName = 'Novo Nome do Usuário';
+    const response = await request(server)
+      .put(`${apiUrl}/profile`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: newName,
+      });
+
+    expect(response.status).toBe(StatusCode.OK);
+    expect(response.body.message).toBe('Usuário atualizado com sucesso.');
+    expect(response.body.user).toHaveProperty('name', newName);
+    expect(response.body.user).toHaveProperty('email', user.email);
+  });
+
+  it('deve atualizar múltiplos campos do usuário com sucesso', async () => {
+    const { user, loginData } = await UserFactory.createUserAndGetLoginData();
+    const loginResponse = await request(server).post(`${apiUrl}/login`).send(loginData);
+    const token = loginResponse.body.token.accessToken;
+
+    const newName = 'Nome Atualizado';
+    const newPassword = 'novaSenha789';
+    const response = await request(server)
+      .put(`${apiUrl}/profile`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: newName,
+        currentPassword: loginData.password,
+        newPassword,
+      });
+
+    expect(response.status).toBe(StatusCode.OK);
+    expect(response.body.message).toBe('Usuário atualizado com sucesso.');
+    expect(response.body.user).toHaveProperty('name', newName);
+    expect(response.body.user).toHaveProperty('email', user.email);
+
+    const newLoginResponse = await request(server).post(`${apiUrl}/login`).send({
+      email: user.email,
+      password: newPassword,
+    });
+
+    expect(newLoginResponse.status).toBe(StatusCode.OK);
+    expect(newLoginResponse.body.token).toHaveProperty('accessToken');
+  });
+
+  it('deve atualizar a senha junto com outros campos', async () => {
+    const { loginData } = await UserFactory.createUserAndGetLoginData();
+    const loginResponse = await request(server).post(`${apiUrl}/login`).send(loginData);
+    const token = loginResponse.body.token.accessToken;
+
+    const newName = 'Nome com Senha Nova';
+    const newPassword = 'novaSenha456';
+    const response = await request(server)
+      .put(`${apiUrl}/profile`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: newName,
+        currentPassword: loginData.password,
+        newPassword,
+      });
+
+    expect(response.status).toBe(StatusCode.OK);
+    expect(response.body.message).toBe('Usuário atualizado com sucesso.');
+    expect(response.body.user).toHaveProperty('name', newName);
+
+    const newLoginResponse = await request(server).post(`${apiUrl}/login`).send({
+      email: loginData.email,
+      password: newPassword,
+    });
+
+    expect(newLoginResponse.status).toBe(StatusCode.OK);
+    expect(newLoginResponse.body.token).toHaveProperty('accessToken');
+  });
+
+  it('deve falhar ao atualizar usuário sem fornecer campos', async () => {
+    const { loginData } = await UserFactory.createUserAndGetLoginData();
+    const loginResponse = await request(server).post(`${apiUrl}/login`).send(loginData);
+    const token = loginResponse.body.token.accessToken;
+
+    const response = await request(server)
+      .put(`${apiUrl}/profile`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({});
+
+    expect(response.status).toBe(StatusCode.BAD_REQUEST);
+  });
+
+  it('deve falhar ao atualizar senha sem fornecer senha atual', async () => {
+    const { loginData } = await UserFactory.createUserAndGetLoginData();
+    const loginResponse = await request(server).post(`${apiUrl}/login`).send(loginData);
+    const token = loginResponse.body.token.accessToken;
+
+    const response = await request(server)
+      .put(`${apiUrl}/profile`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        newPassword: 'novaSenha123',
+      });
+
+    expect(response.status).toBe(StatusCode.BAD_REQUEST);
+  });
 });

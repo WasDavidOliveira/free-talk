@@ -1,4 +1,11 @@
-import { loginSchema, registerSchema, userResponseSchema } from '@/validations/v1/modules/auth.validations';
+import { 
+  loginSchema, 
+  registerSchema, 
+  userResponseSchema, 
+  resetPasswordSchema, 
+  changePasswordSchema, 
+  updateUserSchema 
+} from '@/validations/v1/modules/auth.validations';
 import {
   addParticipantsSchema,
   createConversationSchema,
@@ -56,6 +63,49 @@ export const generateOpenAPIDocument = () => {
     .openapi({
       ref: 'MeResponse',
       description: 'Resposta com dados do usuário atual',
+    });
+
+  const resetPasswordResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Senha resetada com sucesso',
+      }),
+      newPassword: z.string().openapi({
+        description: 'Nova senha gerada automaticamente',
+        example: 'aB3xK9mP',
+      }),
+      user: userResponseSchema,
+    })
+    .openapi({
+      ref: 'ResetPasswordResponse',
+      description: 'Resposta de reset de senha bem-sucedido',
+    });
+
+  const changePasswordResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Senha alterada com sucesso',
+      }),
+      user: userResponseSchema,
+    })
+    .openapi({
+      ref: 'ChangePasswordResponse',
+      description: 'Resposta de alteração de senha bem-sucedida',
+    });
+
+  const updateUserResponseSchema = z
+    .object({
+      message: z.string().openapi({
+        description: 'Mensagem de sucesso',
+        example: 'Usuário atualizado com sucesso',
+      }),
+      user: userResponseSchema,
+    })
+    .openapi({
+      ref: 'UpdateUserResponse',
+      description: 'Resposta de atualização de usuário bem-sucedida',
     });
 
   const conversationResponseSchema = z
@@ -245,6 +295,118 @@ export const generateOpenAPIDocument = () => {
                   schema: meResponseSchema,
                 },
               },
+            },
+            '401': {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            '404': {
+              description: 'Usuário não encontrado',
+            },
+          },
+        },
+      },
+
+      '/api/v1/auth/reset-password': {
+        post: {
+          tags: ['Autenticação'],
+          summary: 'Reset de senha',
+          description: 'Endpoint para resetar a senha de um usuário. Gera uma nova senha aleatória e retorna na resposta.',
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: resetPasswordSchema.shape.body,
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'Senha resetada com sucesso',
+              content: {
+                'application/json': {
+                  schema: resetPasswordResponseSchema,
+                },
+              },
+            },
+            '400': {
+              description: 'Dados inválidos',
+            },
+            '404': {
+              description: 'Usuário não encontrado',
+            },
+          },
+        },
+      },
+
+      '/api/v1/auth/change-password': {
+        put: {
+          tags: ['Autenticação'],
+          summary: 'Alterar senha',
+          description: 'Endpoint para permitir que o usuário altere sua própria senha',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: changePasswordSchema.shape.body,
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'Senha alterada com sucesso',
+              content: {
+                'application/json': {
+                  schema: changePasswordResponseSchema,
+                },
+              },
+            },
+            '400': {
+              description: 'Dados inválidos ou senha atual incorreta',
+            },
+            '401': {
+              description: 'Não autorizado - Token ausente ou inválido',
+            },
+            '404': {
+              description: 'Usuário não encontrado',
+            },
+          },
+        },
+      },
+
+      '/api/v1/auth/profile': {
+        put: {
+          tags: ['Autenticação'],
+          summary: 'Atualizar perfil do usuário',
+          description: 'Endpoint para permitir que o usuário atualize suas informações (nome e/ou senha). O email não pode ser alterado.',
+          security: [
+            {
+              bearerAuth: [],
+            },
+          ],
+          requestBody: {
+            required: true,
+            content: {
+              'application/json': {
+                schema: updateUserSchema.shape.body,
+              },
+            },
+          },
+          responses: {
+            '200': {
+              description: 'Usuário atualizado com sucesso',
+              content: {
+                'application/json': {
+                  schema: updateUserResponseSchema,
+                },
+              },
+            },
+            '400': {
+              description: 'Dados inválidos, nenhum campo fornecido ou senha atual incorreta',
             },
             '401': {
               description: 'Não autorizado - Token ausente ou inválido',

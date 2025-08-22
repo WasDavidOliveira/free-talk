@@ -115,6 +115,133 @@
         }
       }
     },
+    "/api/v1/auth/reset-password": {
+      "post": {
+        "tags": [
+          "Autenticação"
+        ],
+        "summary": "Reset de senha",
+        "description": "Endpoint para resetar a senha de um usuário. Gera uma nova senha aleatória e retorna na resposta.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Senha resetada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetPasswordResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/change-password": {
+      "put": {
+        "tags": [
+          "Autenticação"
+        ],
+        "summary": "Alterar senha",
+        "description": "Endpoint para permitir que o usuário altere sua própria senha",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Senha alterada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangePasswordResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos ou senha atual incorreta"
+          },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      }
+    },
+    "/api/v1/auth/profile": {
+      "put": {
+        "tags": [
+          "Autenticação"
+        ],
+        "summary": "Atualizar perfil do usuário",
+        "description": "Endpoint para permitir que o usuário atualize suas informações (nome e/ou senha). O email não pode ser alterado.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Usuário atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Dados inválidos, nenhum campo fornecido ou senha atual incorreta"
+          },
+          "401": {
+            "description": "Não autorizado - Token ausente ou inválido"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          }
+        }
+      }
+    },
     "/api/v1/conversations": {
       "get": {
         "tags": [
@@ -1161,6 +1288,131 @@
           "user"
         ],
         "description": "Resposta com dados do usuário atual"
+      },
+      "ResetPasswordInput": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email do usuário para reset de senha",
+            "example": "usuario@exemplo.com"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "description": "Dados para reset de senha"
+      },
+      "ResetPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Senha resetada com sucesso"
+          },
+          "newPassword": {
+            "type": "string",
+            "description": "Nova senha gerada automaticamente",
+            "example": "aB3xK9mP"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "message",
+          "newPassword",
+          "user"
+        ],
+        "description": "Resposta de reset de senha bem-sucedido"
+      },
+      "ChangePasswordInput": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "minLength": 6,
+            "description": "Senha atual do usuário",
+            "example": "senha123",
+            "format": "password"
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 6,
+            "description": "Nova senha do usuário",
+            "example": "novaSenha123",
+            "format": "password"
+          }
+        },
+        "required": [
+          "currentPassword",
+          "newPassword"
+        ],
+        "description": "Dados para alteração de senha"
+      },
+      "ChangePasswordResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Senha alterada com sucesso"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "message",
+          "user"
+        ],
+        "description": "Resposta de alteração de senha bem-sucedida"
+      },
+      "UpdateUserInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "description": "Nome do usuário",
+            "example": "João Silva"
+          },
+          "currentPassword": {
+            "type": "string",
+            "minLength": 6,
+            "description": "Senha atual (obrigatória se alterando senha)",
+            "example": "senha123",
+            "format": "password"
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 6,
+            "description": "Nova senha (obrigatória se alterando senha)",
+            "example": "novaSenha123",
+            "format": "password"
+          }
+        },
+        "description": "Dados para atualização do usuário (nome e/ou senha)"
+      },
+      "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Mensagem de sucesso",
+            "example": "Usuário atualizado com sucesso"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "message",
+          "user"
+        ],
+        "description": "Resposta de atualização de usuário bem-sucedida"
       },
       "ConversationListResponse": {
         "type": "object",
