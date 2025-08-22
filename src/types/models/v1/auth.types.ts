@@ -3,3 +3,4 @@ import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 
 export type UserModel = InferSelectModel<typeof user>;
 export type CreateUserModel = InferInsertModel<typeof user>;
+export type UpdateUserModel = Partial<Omit<CreateUserModel, 'id' | 'createdAt'>>;

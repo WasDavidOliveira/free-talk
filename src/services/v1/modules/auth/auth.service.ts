@@ -51,6 +51,55 @@ export class AuthService {
 
     return user;
   }
+
+  async resetPassword(email: string) {
+    const user = await UserRepository.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundError('Usuário não encontrado');
+    }
+
+    const newPassword = this.generateRandomPassword();
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+
+    await UserRepository.update(user.id, { password: passwordHash });
+
+    return {
+      user,
+      newPassword,
+    };
+  }
+
+  async changePassword(userId: number, currentPassword: string, newPassword: string) {
+    const user = await UserRepository.findById(userId);
+
+    if (!user) {
+      throw new NotFoundError('Usuário não encontrado');
+    }
+
+    const isCurrentPasswordValid = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isCurrentPasswordValid) {
+      throw new UnauthorizedError('Senha atual incorreta');
+    }
+
+    const newPasswordHash = await bcrypt.hash(newPassword, 10);
+
+    await UserRepository.update(userId, { password: newPasswordHash });
+
+    return user;
+  }
+
+  protected generateRandomPassword(): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    
+    for (let i = 0; i < 8; i++) {
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    return result;
+  }
 }
 
 export default new AuthService();

@@ -1,6 +1,6 @@
 import { db } from '@/db/db.connection';
 import { user } from '@/db/schema/v1/user.schema';
-import { CreateUserModel, UserModel } from '@/types/models/v1/auth.types';
+import { CreateUserModel, UpdateUserModel, UserModel } from '@/types/models/v1/auth.types';
 import { ConflictError } from '@/utils/core/app-error.utils';
 import { eq } from 'drizzle-orm';
 
@@ -37,6 +37,16 @@ class UserRepository {
 
       throw error;
     }
+  }
+
+  async update(id: number, userData: UpdateUserModel): Promise<UserModel> {
+    const [updatedUser] = await db
+      .update(user)
+      .set({ ...userData, updatedAt: new Date() })
+      .where(eq(user.id, id))
+      .returning();
+
+    return updatedUser;
   }
 }
 
