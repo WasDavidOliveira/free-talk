@@ -1,7 +1,8 @@
 import { corsConfig } from '@/configs/cors.config';
 import { helmetConfig } from '@/configs/helmet.config';
 import { configureDocs } from '@/middlewares/core/docs.middleware';
-import { errorHandler, notFoundHandler } from '@/middlewares/core/error-hander.middleware';
+import { errorHandler } from '@/middlewares/core/error-hander.middleware';
+import { notFoundHandler } from '@/middlewares/core/not-found.middleware';
 import { globalRateLimiter } from '@/middlewares/core/rate-limit.middleware';
 import router from '@/routes/router';
 import cors from 'cors';

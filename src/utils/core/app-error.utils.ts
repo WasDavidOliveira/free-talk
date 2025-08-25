@@ -1,12 +1,17 @@
 import appConfig from '@/configs/app.config';
 import { Environment } from '@/constants/environment.constants';
+import { StatusCode } from '@/constants/status-code.constants';
 import { ValidationErrorItem } from '@/types/core/errors.types';
 
 export class AppError extends Error {
   statusCode: number;
   errors?: ValidationErrorItem[];
 
-  constructor(message: string, statusCode: number = 400, errors?: ValidationErrorItem[]) {
+  constructor(
+    message: string,
+    statusCode: number = StatusCode.BAD_REQUEST,
+    errors?: ValidationErrorItem[],
+  ) {
     super(message);
     this.statusCode = statusCode;
     this.errors = errors;
@@ -20,36 +25,36 @@ export class AppError extends Error {
 
 export class BadRequestError extends AppError {
   constructor(message: string = 'Requisição inválida', errors?: ValidationErrorItem[]) {
-    super(message, 400, errors);
+    super(message, StatusCode.BAD_REQUEST, errors);
   }
 }
 
 export class UnauthorizedError extends AppError {
   constructor(message: string = 'Não autorizado') {
-    super(message, 401);
+    super(message, StatusCode.UNAUTHORIZED);
   }
 }
 
 export class ForbiddenError extends AppError {
   constructor(message: string = 'Acesso negado') {
-    super(message, 403);
+    super(message, StatusCode.FORBIDDEN);
   }
 }
 
 export class NotFoundError extends AppError {
   constructor(message: string = 'Recurso não encontrado') {
-    super(message, 404);
+    super(message, StatusCode.NOT_FOUND);
   }
 }
 
 export class ValidationError extends AppError {
   constructor(message: string = 'Erro de validação', errors: ValidationErrorItem[] = []) {
-    super(message, 400, errors);
+    super(message, StatusCode.BAD_REQUEST, errors);
   }
 }
 
 export class ConflictError extends AppError {
   constructor(message: string = 'Recurso já existe') {
-    super(message, 409);
+    super(message, StatusCode.CONFLICT);
   }
 }
