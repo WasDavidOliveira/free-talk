@@ -3,7 +3,13 @@ import { StatusCode } from '@/constants/status-code.constants';
 import { UserResource } from '@/resources/v1/modules/user/user.resources';
 import AuthService from '@/services/v1/modules/auth/auth.service';
 import { catchAsync } from '@/utils/infrastructure/catch-async.utils';
-import { LoginInput, RegisterInput, ResetPasswordInput, ChangePasswordInput, UpdateUserInput } from '@/validations/v1/modules/auth.validations';
+import {
+  ChangePasswordInput,
+  LoginInput,
+  RegisterInput,
+  ResetPasswordInput,
+  UpdateUserInput,
+} from '@/validations/v1/modules/auth.validations';
 import { Request, Response } from 'express';
 
 export class AuthController {
@@ -49,11 +55,7 @@ export class AuthController {
   });
 
   changePassword = catchAsync(async (req: Request<{}, {}, ChangePasswordInput>, res: Response) => {
-    const user = await AuthService.changePassword(
-      req.userId,
-      req.body.currentPassword,
-      req.body.newPassword
-    );
+    const user = await AuthService.changePassword(req.userId, req.body.currentPassword, req.body.newPassword);
 
     res.status(StatusCode.OK).json({
       message: 'Senha alterada com sucesso.',

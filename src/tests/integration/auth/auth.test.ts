@@ -129,12 +129,9 @@ describe('Autenticação', () => {
     const token = loginResponse.body.token.accessToken;
 
     const newName = 'Novo Nome do Usuário';
-    const response = await request(server)
-      .put(`${apiUrl}/profile`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        name: newName,
-      });
+    const response = await request(server).put(`${apiUrl}/profile`).set('Authorization', `Bearer ${token}`).send({
+      name: newName,
+    });
 
     expect(response.status).toBe(StatusCode.OK);
     expect(response.body.message).toBe('Usuário atualizado com sucesso.');
@@ -149,14 +146,11 @@ describe('Autenticação', () => {
 
     const newName = 'Nome Atualizado';
     const newPassword = 'novaSenha789';
-    const response = await request(server)
-      .put(`${apiUrl}/profile`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        name: newName,
-        currentPassword: loginData.password,
-        newPassword,
-      });
+    const response = await request(server).put(`${apiUrl}/profile`).set('Authorization', `Bearer ${token}`).send({
+      name: newName,
+      currentPassword: loginData.password,
+      newPassword,
+    });
 
     expect(response.status).toBe(StatusCode.OK);
     expect(response.body.message).toBe('Usuário atualizado com sucesso.');
@@ -179,14 +173,11 @@ describe('Autenticação', () => {
 
     const newName = 'Nome com Senha Nova';
     const newPassword = 'novaSenha456';
-    const response = await request(server)
-      .put(`${apiUrl}/profile`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        name: newName,
-        currentPassword: loginData.password,
-        newPassword,
-      });
+    const response = await request(server).put(`${apiUrl}/profile`).set('Authorization', `Bearer ${token}`).send({
+      name: newName,
+      currentPassword: loginData.password,
+      newPassword,
+    });
 
     expect(response.status).toBe(StatusCode.OK);
     expect(response.body.message).toBe('Usuário atualizado com sucesso.');
@@ -206,10 +197,7 @@ describe('Autenticação', () => {
     const loginResponse = await request(server).post(`${apiUrl}/login`).send(loginData);
     const token = loginResponse.body.token.accessToken;
 
-    const response = await request(server)
-      .put(`${apiUrl}/profile`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({});
+    const response = await request(server).put(`${apiUrl}/profile`).set('Authorization', `Bearer ${token}`).send({});
 
     expect(response.status).toBe(StatusCode.BAD_REQUEST);
   });
@@ -219,12 +207,9 @@ describe('Autenticação', () => {
     const loginResponse = await request(server).post(`${apiUrl}/login`).send(loginData);
     const token = loginResponse.body.token.accessToken;
 
-    const response = await request(server)
-      .put(`${apiUrl}/profile`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        newPassword: 'novaSenha123',
-      });
+    const response = await request(server).put(`${apiUrl}/profile`).set('Authorization', `Bearer ${token}`).send({
+      newPassword: 'novaSenha123',
+    });
 
     expect(response.status).toBe(StatusCode.BAD_REQUEST);
   });

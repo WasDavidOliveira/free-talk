@@ -136,7 +136,7 @@ export const updateUserSchema = z.object({
       {
         message: 'Para alterar a senha, tanto a senha atual quanto a nova senha são obrigatórias',
         path: ['currentPassword'],
-      }
+      },
     )
     .refine(
       (data) => {
@@ -145,7 +145,7 @@ export const updateUserSchema = z.object({
       {
         message: 'Pelo menos um campo deve ser fornecido para atualização',
         path: ['body'],
-      }
+      },
     )
     .openapi({
       ref: 'UpdateUserInput',

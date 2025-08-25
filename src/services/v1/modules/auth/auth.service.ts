@@ -1,6 +1,6 @@
 import appConfig from '@/configs/app.config';
 import UserRepository from '@/repositories/v1/modules/auth/user.repository';
-import { NotFoundError, UnauthorizedError, BadRequestError } from '@/utils/core/app-error.utils';
+import { BadRequestError, NotFoundError, UnauthorizedError } from '@/utils/core/app-error.utils';
 import { LoginInput, RegisterInput } from '@/validations/v1/modules/auth.validations';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -90,11 +90,14 @@ export class AuthService {
     return user;
   }
 
-  async updateUser(userId: number, updateData: {
-    name?: string;
-    currentPassword?: string;
-    newPassword?: string;
-  }) {
+  async updateUser(
+    userId: number,
+    updateData: {
+      name?: string;
+      currentPassword?: string;
+      newPassword?: string;
+    },
+  ) {
     const user = await UserRepository.findById(userId);
 
     if (!user) {
@@ -130,11 +133,11 @@ export class AuthService {
   protected generateRandomPassword(): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let result = '';
-    
+
     for (let i = 0; i < 8; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    
+
     return result;
   }
 }

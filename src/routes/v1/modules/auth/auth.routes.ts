@@ -1,7 +1,13 @@
 import AuthController from '@/controllers/v1/modules/auth/auth.controller';
 import { authMiddleware } from '@/middlewares/auth/auth.middlewares';
 import { validateRequest } from '@/middlewares/validation/validate-request.middlewares';
-import { loginSchema, registerSchema, resetPasswordSchema, changePasswordSchema, updateUserSchema } from '@/validations/v1/modules/auth.validations';
+import {
+  changePasswordSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+  updateUserSchema,
+} from '@/validations/v1/modules/auth.validations';
 import { Router } from 'express';
 
 const router: Router = Router();

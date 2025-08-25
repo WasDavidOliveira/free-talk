@@ -1,10 +1,10 @@
-import { 
-  loginSchema, 
-  registerSchema, 
-  userResponseSchema, 
-  resetPasswordSchema, 
-  changePasswordSchema, 
-  updateUserSchema 
+import {
+  changePasswordSchema,
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+  updateUserSchema,
+  userResponseSchema,
 } from '@/validations/v1/modules/auth.validations';
 import {
   addParticipantsSchema,
@@ -310,7 +310,8 @@ export const generateOpenAPIDocument = () => {
         post: {
           tags: ['Autenticação'],
           summary: 'Reset de senha',
-          description: 'Endpoint para resetar a senha de um usuário. Gera uma nova senha aleatória e retorna na resposta.',
+          description:
+            'Endpoint para resetar a senha de um usuário. Gera uma nova senha aleatória e retorna na resposta.',
           requestBody: {
             required: true,
             content: {
@@ -382,7 +383,8 @@ export const generateOpenAPIDocument = () => {
         put: {
           tags: ['Autenticação'],
           summary: 'Atualizar perfil do usuário',
-          description: 'Endpoint para permitir que o usuário atualize suas informações (nome e/ou senha). O email não pode ser alterado.',
+          description:
+            'Endpoint para permitir que o usuário atualize suas informações (nome e/ou senha). O email não pode ser alterado.',
           security: [
             {
               bearerAuth: [],

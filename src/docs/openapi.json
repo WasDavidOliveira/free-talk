@@ -14,9 +14,7 @@
   "paths": {
     "/api/v1/auth/login": {
       "post": {
-        "tags": [
-          "Autenticação"
-        ],
+        "tags": ["Autenticação"],
         "summary": "Login de usuário",
         "description": "Endpoint para autenticar um usuário existente",
         "requestBody": {
@@ -51,9 +49,7 @@
     },
     "/api/v1/auth/register": {
       "post": {
-        "tags": [
-          "Autenticação"
-        ],
+        "tags": ["Autenticação"],
         "summary": "Registro de usuário",
         "description": "Endpoint para cadastrar um novo usuário",
         "requestBody": {
@@ -85,9 +81,7 @@
     },
     "/api/v1/auth/me": {
       "get": {
-        "tags": [
-          "Autenticação"
-        ],
+        "tags": ["Autenticação"],
         "summary": "Detalhes do usuário atual",
         "description": "Endpoint para obter informações do usuário autenticado",
         "security": [
@@ -117,9 +111,7 @@
     },
     "/api/v1/auth/reset-password": {
       "post": {
-        "tags": [
-          "Autenticação"
-        ],
+        "tags": ["Autenticação"],
         "summary": "Reset de senha",
         "description": "Endpoint para resetar a senha de um usuário. Gera uma nova senha aleatória e retorna na resposta.",
         "requestBody": {
@@ -154,9 +146,7 @@
     },
     "/api/v1/auth/change-password": {
       "put": {
-        "tags": [
-          "Autenticação"
-        ],
+        "tags": ["Autenticação"],
         "summary": "Alterar senha",
         "description": "Endpoint para permitir que o usuário altere sua própria senha",
         "security": [
@@ -199,9 +189,7 @@
     },
     "/api/v1/auth/profile": {
       "put": {
-        "tags": [
-          "Autenticação"
-        ],
+        "tags": ["Autenticação"],
         "summary": "Atualizar perfil do usuário",
         "description": "Endpoint para permitir que o usuário atualize suas informações (nome e/ou senha). O email não pode ser alterado.",
         "security": [
@@ -244,9 +232,7 @@
     },
     "/api/v1/conversations": {
       "get": {
-        "tags": [
-          "Conversas"
-        ],
+        "tags": ["Conversas"],
         "summary": "Listar conversas do usuário",
         "description": "Endpoint para listar todas as conversas do usuário autenticado com paginação",
         "security": [
@@ -299,9 +285,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Conversas"
-        ],
+        "tags": ["Conversas"],
         "summary": "Criar nova conversa",
         "description": "Endpoint para criar uma nova conversa",
         "security": [
@@ -334,10 +318,7 @@
                       "$ref": "#/components/schemas/ConversationResponse"
                     }
                   },
-                  "required": [
-                    "message",
-                    "data"
-                  ]
+                  "required": ["message", "data"]
                 }
               }
             }
@@ -353,9 +334,7 @@
     },
     "/api/v1/conversations/{id}": {
       "get": {
-        "tags": [
-          "Conversas"
-        ],
+        "tags": ["Conversas"],
         "summary": "Buscar conversa específica",
         "description": "Endpoint para buscar uma conversa específica por ID",
         "security": [
@@ -389,10 +368,7 @@
                       "$ref": "#/components/schemas/ConversationResponse"
                     }
                   },
-                  "required": [
-                    "message",
-                    "data"
-                  ]
+                  "required": ["message", "data"]
                 }
               }
             }
@@ -406,9 +382,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Conversas"
-        ],
+        "tags": ["Conversas"],
         "summary": "Atualizar conversa",
         "description": "Endpoint para atualizar uma conversa existente",
         "security": [
@@ -452,10 +426,7 @@
                       "$ref": "#/components/schemas/ConversationResponse"
                     }
                   },
-                  "required": [
-                    "message",
-                    "data"
-                  ]
+                  "required": ["message", "data"]
                 }
               }
             }
@@ -469,9 +440,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Conversas"
-        ],
+        "tags": ["Conversas"],
         "summary": "Deletar conversa",
         "description": "Endpoint para deletar uma conversa",
         "security": [
@@ -502,9 +471,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             }
@@ -520,9 +487,7 @@
     },
     "/api/v1/conversations/{id}/participants": {
       "get": {
-        "tags": [
-          "Participantes"
-        ],
+        "tags": ["Participantes"],
         "summary": "Listar participantes da conversa",
         "description": "Endpoint para listar todos os participantes de uma conversa",
         "security": [
@@ -559,10 +524,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "message",
-                    "data"
-                  ]
+                  "required": ["message", "data"]
                 }
               }
             }
@@ -576,9 +538,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Participantes"
-        ],
+        "tags": ["Participantes"],
         "summary": "Adicionar participantes",
         "description": "Endpoint para adicionar múltiplos participantes a uma conversa",
         "security": [
@@ -625,10 +585,7 @@
                       }
                     }
                   },
-                  "required": [
-                    "message",
-                    "data"
-                  ]
+                  "required": ["message", "data"]
                 }
               }
             }
@@ -647,9 +604,7 @@
     },
     "/api/v1/conversations/{id}/participants/{userId}": {
       "delete": {
-        "tags": [
-          "Participantes"
-        ],
+        "tags": ["Participantes"],
         "summary": "Remover participante",
         "description": "Endpoint para remover um participante específico da conversa",
         "security": [
@@ -689,9 +644,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             }
@@ -707,9 +660,7 @@
     },
     "/api/v1/conversations/{conversationId}/messages": {
       "get": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Listar mensagens da conversa",
         "description": "Endpoint para listar mensagens de uma conversa com paginação",
         "security": [
@@ -766,9 +717,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Enviar mensagem",
         "description": "Endpoint para enviar uma nova mensagem na conversa",
         "security": [
@@ -812,10 +761,7 @@
                       "$ref": "#/components/schemas/MessageResponse"
                     }
                   },
-                  "required": [
-                    "message",
-                    "data"
-                  ]
+                  "required": ["message", "data"]
                 }
               }
             }
@@ -831,9 +777,7 @@
     },
     "/api/v1/conversations/{conversationId}/messages/{messageId}": {
       "get": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Buscar mensagem específica",
         "description": "Endpoint para buscar uma mensagem específica",
         "security": [
@@ -876,10 +820,7 @@
                       "$ref": "#/components/schemas/MessageResponse"
                     }
                   },
-                  "required": [
-                    "message",
-                    "data"
-                  ]
+                  "required": ["message", "data"]
                 }
               }
             }
@@ -896,9 +837,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Editar mensagem",
         "description": "Endpoint para editar uma mensagem existente (apenas pelo autor)",
         "security": [
@@ -951,10 +890,7 @@
                       "$ref": "#/components/schemas/MessageResponse"
                     }
                   },
-                  "required": [
-                    "message",
-                    "data"
-                  ]
+                  "required": ["message", "data"]
                 }
               }
             }
@@ -971,9 +907,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Deletar mensagem",
         "description": "Endpoint para deletar uma mensagem (autor ou criador da conversa)",
         "security": [
@@ -1013,9 +947,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             }
@@ -1034,9 +966,7 @@
     },
     "/api/v1/conversations/{conversationId}/messages/mark-as-read": {
       "post": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Marcar mensagens como lidas",
         "description": "Endpoint para marcar múltiplas mensagens como lidas",
         "security": [
@@ -1077,9 +1007,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "message"
-                  ]
+                  "required": ["message"]
                 }
               }
             }
@@ -1098,9 +1026,7 @@
     },
     "/api/v1/conversations/{conversationId}/messages/unread-count": {
       "get": {
-        "tags": [
-          "Mensagens"
-        ],
+        "tags": ["Mensagens"],
         "summary": "Contar mensagens não lidas",
         "description": "Endpoint para obter a contagem de mensagens não lidas da conversa",
         "security": [
@@ -1166,10 +1092,7 @@
             "format": "password"
           }
         },
-        "required": [
-          "email",
-          "password"
-        ],
+        "required": ["email", "password"],
         "description": "Dados para autenticação de usuário"
       },
       "LoginResponse": {
@@ -1189,11 +1112,7 @@
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
           }
         },
-        "required": [
-          "message",
-          "user",
-          "token"
-        ],
+        "required": ["message", "user", "token"],
         "description": "Resposta de login bem-sucedido"
       },
       "User": {
@@ -1216,11 +1135,7 @@
             "example": "usuario@exemplo.com"
           }
         },
-        "required": [
-          "id",
-          "name",
-          "email"
-        ],
+        "required": ["id", "name", "email"],
         "description": "Informações do usuário"
       },
       "RegisterInput": {
@@ -1246,11 +1161,7 @@
             "format": "password"
           }
         },
-        "required": [
-          "name",
-          "email",
-          "password"
-        ],
+        "required": ["name", "email", "password"],
         "description": "Dados para criação de um novo usuário"
       },
       "RegisterResponse": {
@@ -1265,10 +1176,7 @@
             "$ref": "#/components/schemas/User"
           }
         },
-        "required": [
-          "message",
-          "user"
-        ],
+        "required": ["message", "user"],
         "description": "Resposta de registro bem-sucedido"
       },
       "MeResponse": {
@@ -1283,10 +1191,7 @@
             "$ref": "#/components/schemas/User"
           }
         },
-        "required": [
-          "message",
-          "user"
-        ],
+        "required": ["message", "user"],
         "description": "Resposta com dados do usuário atual"
       },
       "ResetPasswordInput": {
@@ -1299,9 +1204,7 @@
             "example": "usuario@exemplo.com"
           }
         },
-        "required": [
-          "email"
-        ],
+        "required": ["email"],
         "description": "Dados para reset de senha"
       },
       "ResetPasswordResponse": {
@@ -1321,11 +1224,7 @@
             "$ref": "#/components/schemas/User"
           }
         },
-        "required": [
-          "message",
-          "newPassword",
-          "user"
-        ],
+        "required": ["message", "newPassword", "user"],
         "description": "Resposta de reset de senha bem-sucedido"
       },
       "ChangePasswordInput": {
@@ -1346,10 +1245,7 @@
             "format": "password"
           }
         },
-        "required": [
-          "currentPassword",
-          "newPassword"
-        ],
+        "required": ["currentPassword", "newPassword"],
         "description": "Dados para alteração de senha"
       },
       "ChangePasswordResponse": {
@@ -1364,10 +1260,7 @@
             "$ref": "#/components/schemas/User"
           }
         },
-        "required": [
-          "message",
-          "user"
-        ],
+        "required": ["message", "user"],
         "description": "Resposta de alteração de senha bem-sucedida"
       },
       "UpdateUserInput": {
@@ -1408,10 +1301,7 @@
             "$ref": "#/components/schemas/User"
           }
         },
-        "required": [
-          "message",
-          "user"
-        ],
+        "required": ["message", "user"],
         "description": "Resposta de atualização de usuário bem-sucedida"
       },
       "ConversationListResponse": {
@@ -1452,19 +1342,10 @@
                 "example": 5
               }
             },
-            "required": [
-              "page",
-              "per_page",
-              "total",
-              "total_pages"
-            ]
+            "required": ["page", "per_page", "total", "total_pages"]
           }
         },
-        "required": [
-          "message",
-          "data",
-          "pagination"
-        ],
+        "required": ["message", "data", "pagination"],
         "description": "Lista de conversas com paginação"
       },
       "ConversationResponse": {
@@ -1499,11 +1380,7 @@
                 "example": "joao@exemplo.com"
               }
             },
-            "required": [
-              "id",
-              "name",
-              "email"
-            ]
+            "required": ["id", "name", "email"]
           },
           "createdAt": {
             "type": "string",
@@ -1516,13 +1393,7 @@
             "example": "2024-01-01T00:00:00Z"
           }
         },
-        "required": [
-          "id",
-          "title",
-          "createdBy",
-          "createdAt",
-          "updatedAt"
-        ],
+        "required": ["id", "title", "createdBy", "createdAt", "updatedAt"],
         "description": "Dados de uma conversa"
       },
       "CreateConversationInput": {
@@ -1535,9 +1406,7 @@
             "example": "Conversa de teste"
           }
         },
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "description": "Dados para criação de uma nova conversa"
       },
       "UpdateConversationInput": {
@@ -1550,9 +1419,7 @@
             "example": "Conversa de teste"
           }
         },
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "description": "Dados para atualização de uma conversa"
       },
       "ParticipantResponse": {
@@ -1592,19 +1459,10 @@
                 "example": "maria@exemplo.com"
               }
             },
-            "required": [
-              "id",
-              "name",
-              "email"
-            ]
+            "required": ["id", "name", "email"]
           }
         },
-        "required": [
-          "id",
-          "conversationId",
-          "userId",
-          "user"
-        ],
+        "required": ["id", "conversationId", "userId", "user"],
         "description": "Dados de um participante"
       },
       "AddParticipantsInput": {
@@ -1617,16 +1475,10 @@
             },
             "minItems": 1,
             "description": "IDs dos usuários para adicionar como participantes",
-            "example": [
-              1,
-              2,
-              3
-            ]
+            "example": [1, 2, 3]
           }
         },
-        "required": [
-          "userIds"
-        ],
+        "required": ["userIds"],
         "description": "Dados para adicionar participantes a uma conversa"
       },
       "MessageListResponse": {
@@ -1667,19 +1519,10 @@
                 "example": 5
               }
             },
-            "required": [
-              "page",
-              "per_page",
-              "total",
-              "total_pages"
-            ]
+            "required": ["page", "per_page", "total", "total_pages"]
           }
         },
-        "required": [
-          "message",
-          "data",
-          "pagination"
-        ],
+        "required": ["message", "data", "pagination"],
         "description": "Lista de mensagens com paginação"
       },
       "MessageResponse": {
@@ -1735,22 +1578,10 @@
                 "example": "joao@exemplo.com"
               }
             },
-            "required": [
-              "id",
-              "name",
-              "email"
-            ]
+            "required": ["id", "name", "email"]
           }
         },
-        "required": [
-          "id",
-          "conversationId",
-          "content",
-          "messageType",
-          "createdAt",
-          "readAt",
-          "sender"
-        ],
+        "required": ["id", "conversationId", "content", "messageType", "createdAt", "readAt", "sender"],
         "description": "Dados de uma mensagem"
       },
       "CreateMessageInput": {
@@ -1765,19 +1596,13 @@
           },
           "messageType": {
             "type": "string",
-            "enum": [
-              "text",
-              "file",
-              "mixed"
-            ],
+            "enum": ["text", "file", "mixed"],
             "default": "text",
             "description": "Tipo da mensagem",
             "example": "text"
           }
         },
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "description": "Dados para criação de uma nova mensagem"
       },
       "UpdateMessageInput": {
@@ -1791,9 +1616,7 @@
             "example": "Mensagem editada"
           }
         },
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "description": "Dados para atualização de uma mensagem"
       },
       "MarkAsReadInput": {
@@ -1806,16 +1629,10 @@
             },
             "minItems": 1,
             "description": "IDs das mensagens para marcar como lidas",
-            "example": [
-              1,
-              2,
-              3
-            ]
+            "example": [1, 2, 3]
           }
         },
-        "required": [
-          "messageIds"
-        ],
+        "required": ["messageIds"],
         "description": "Dados para marcar mensagens como lidas"
       },
       "UnreadCountResponse": {
@@ -1835,15 +1652,10 @@
                 "example": 5
               }
             },
-            "required": [
-              "unreadCount"
-            ]
+            "required": ["unreadCount"]
           }
         },
-        "required": [
-          "message",
-          "data"
-        ],
+        "required": ["message", "data"],
         "description": "Contagem de mensagens não lidas"
       }
     }
